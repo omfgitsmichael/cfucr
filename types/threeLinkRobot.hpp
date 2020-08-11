@@ -1,0 +1,54 @@
+#ifndef THREELINKROBOT_HPP_
+#define THREELINKROBOT_HPP_
+
+#include <memory>
+#include <vector>
+
+#include "math-utilities/include/matrix_utilities.hpp"
+
+namespace robot
+{
+
+class ThreeLinkRobot
+{
+public:
+  // Constructor //
+  ThreeLinkRobot() = default;
+
+  // Destructor //
+  ~ThreeLinkRobot() = default;
+
+  // Measured Robot States //
+  Vector3x1F theta;
+  Vector3x1F dtheta;
+
+  // Filtered Robot States //
+  Vector3x1F thetaF;
+  Vector3x1F dthetaF;
+
+  // State Error //
+  Vector3x1F e;
+  Vector3x1F de;
+
+  // Desired States //
+  Vector3x1F theta_d;
+  Vector3x1F dtheta_d;
+  Vector3x1F ddtheta_d;
+
+  // Dynamic Parameters Estimates //
+  Vector9x1F parameters;
+
+  // Control //
+  Vector3x1F u;
+
+  // General Robot //
+  unsigned int numberLinks;
+  Vector3x1UI motorGearRatio;
+};
+
+// Shared Pointer to the Robot //
+using sharedThreeLinkRobot = std::shared_ptr<ThreeLinkRobot>;
+
+} // namespace robot
+
+#endif // THREELINKROBOT_HPP_
