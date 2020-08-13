@@ -24,7 +24,7 @@ public:
 
   // Low Pass Filter //
   void execute(Robot& robot);
-  std::tuple<float, float> filter(float y, float yInt, float alpha);
+  float filter(float& y, float& yInt, float& alpha);
 
   // Register the Class //
   void registerLowPass(std::string id);
@@ -32,8 +32,8 @@ public:
 private:
   std::vector<float> alphaQ;
   std::vector<float> alphadQ;
-  std::vector<std::vector<float>> previousOutputQ;
-  std::vector<std::vector<float>> previousOutputdQ;
+  std::vector<std::vector<float>> previousIntegralOutputQ;
+  std::vector<std::vector<float>> previousIntegralOutputdQ;
   unsigned int filterOrder;
 };
 
