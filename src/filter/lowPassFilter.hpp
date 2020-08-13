@@ -37,6 +37,6 @@ private:
   unsigned int filterOrder;
 };
 
-}
+} // namespace robot
 
 #endif // LOWPASSFILTER_HPP_
