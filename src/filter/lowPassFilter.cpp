@@ -6,7 +6,7 @@ namespace robot
 template <typename Robot>
 void lowPassFilter::execute(Robot& robot)
 {
-  // Nested for loop for the number of filters and
+  // Nested for loop between the number of robot links and filter order //
   for (unsigned int j = 0; j < robot->numberLinks; j++)
   {
     for (unsigned int k = 0; k < filterOrder; k++)
