@@ -24,13 +24,16 @@ public:
 
   // Low Pass Filter //
   void execute(Robot& robot);
+  std::tuple<float, float> filter(float y, float yInt, float alpha);
 
   // Register the Class //
   void registerLowPass(std::string id);
 
 private:
-  std::vector<float> alpha;
-  std::vector<float> previousOutput;
+  std::vector<float> alphaQ;
+  std::vector<float> alphadQ;
+  std::vector<std::vector<float>> previousOutputQ;
+  std::vector<std::vector<float>> previousOutputdQ;
   unsigned int filterOrder;
 };
 
