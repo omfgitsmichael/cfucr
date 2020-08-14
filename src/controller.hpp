@@ -2,6 +2,7 @@
 #define CONTROLLER_HPP_
 
 #include <string>
+#include <vector>
 
 namespace robot
 {
@@ -36,6 +37,7 @@ public:
   void execute(Robot robot);
 
 private:
+  // Controller and Filter Class Variables //
   Control control;
   Filter filter;
 };

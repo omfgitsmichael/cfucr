@@ -5,27 +5,19 @@
 namespace robot
 {
 // One Link Adaptive Control //
-void oneLinkAdaptiveControl::execute(sharedOneLinkRobot& robot, const float theta_d, const float dtheta_d, const float ddtheta_d)
+void oneLinkAdaptiveControl::execute(sharedOneLinkRobot& robot)
 {
-  // Store the Latest Desired Trajectory in the Robot //
-  robot->theta_d = theta_d;
-  robot->dtheta_d = dtheta_d;
-  robot->ddtheta_d = ddtheta_d;
-
-  // Calculate and Store the Error //
-  float thetaF = robot->thetaF;
-  float dthetaF = robot->dthetaF;
-
-  float e = thetaF - theta_d;
-  float de = dthetaF - dtheta_d;
+  // Calculate and Save the Error //
+  float e = robot->thetaF - robot->theta_d;
+  float de = robot->dthetaF - robot->dtheta_d;
 
   robot->e = e;
   robot->de = de;
 
   // Calculate Passivity Terms //
-  float v = calculateOneLinkV(robot);
-  float a = calculateOneLinkA(robot);
-  float r = calculateOneLinkR(robot);
+  const float v = calculateOneLinkV(robot);
+  const float a = calculateOneLinkA(robot);
+  const float r = calculateOneLinkR(robot);
 
   // Calculate Regressor Matrix //
   Matrix1x2F Y = oneLinkRegressor(robot, v, a);
