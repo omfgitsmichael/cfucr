@@ -1,10 +1,10 @@
-#ifndef ONELINKROBOT_HPP_
-#define ONELINKROBOT_HPP_
+#ifndef ONE_LINK_ROBOT_HPP_
+#define ONE_LINK_ROBOT_HPP_
 
 #include <memory>
 #include <vector>
 
-#include "math-utilities/include/matrix_utilities.hpp"
+#include "mathUtilities/matrixUtilities.hpp"
 
 namespace robot
 {
@@ -51,4 +51,4 @@ using sharedOneLinkRobot = std::shared_ptr<OneLinkRobot>;
 
 } // namespace robot
 
-#endif // ONELINKROBOT_HPP_
+#endif // ONE_LINK_ROBOT_HPP_

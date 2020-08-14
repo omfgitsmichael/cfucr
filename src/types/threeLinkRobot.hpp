@@ -1,10 +1,10 @@
-#ifndef THREELINKROBOT_HPP_
-#define THREELINKROBOT_HPP_
+#ifndef THREE_LINK_ROBOT_HPP_
+#define THREE_LINK_ROBOT_HPP_
 
 #include <memory>
 #include <vector>
 
-#include "math-utilities/include/matrix_utilities.hpp"
+#include "mathUtilities/matrixUtilities.hpp"
 
 namespace robot
 {
@@ -51,4 +51,4 @@ using sharedThreeLinkRobot = std::shared_ptr<ThreeLinkRobot>;
 
 } // namespace robot
 
-#endif // THREELINKROBOT_HPP_
+#endif // THREE_LINK_ROBOT_HPP_

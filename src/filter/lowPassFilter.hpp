@@ -1,10 +1,10 @@
-#ifndef LOWPASSFILTER_HPP_
-#define LOWPASSFILTER_HPP_
+#ifndef LOW_PASS_FILTER_HPP_
+#define LOW_PASS_FILTER_HPP_
 
 #include <string>
 #include <vector>
 
-#include "math-utilities/include/matrix_utilities.hpp"
+#include "mathUtilities/matrixUtilities.hpp"
 
 namespace robot
 {
@@ -39,4 +39,4 @@ private:
 
 } // namespace robot
 
-#endif // LOWPASSFILTER_HPP_
+#endif // LOW_PASS_FILTER_HPP_

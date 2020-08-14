@@ -1,10 +1,10 @@
-#ifndef CONTROL_HPP_
-#define CONTROL_HPP_
+#ifndef ONE_LINK_ADAPTIVE_CONTROL_HPP_
+#define ONE_LINK_ADAPTIVE_CONTROL_HPP_
 
 #include <string>
 
 #include "types/oneLinkRobot.hpp"
-#include "math-utilities/include/matrix_utilities.hpp"
+#include "mathUtilities/matrixUtilities.hpp"
 
 namespace robot
 {
@@ -43,4 +43,4 @@ private:
 };
 
 } // namespace robot
-#endif // CONTROL_HPP_
+#endif // ONE_LINK_ADAPTIVE_CONTROL_HPP_
