@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "configurator/configurator.hpp"
+
 namespace robot
 {
 
@@ -12,7 +14,7 @@ class Controller
 {
 public:
   Controller(const std::string configFile, Robot& robot, Control& c, Filter& f)
-  : control(std::move(C)), filter(std::move(f))
+  : mControl(std::move(c)), mFilter(std::move(f))
   {
     // Initialize the control and filter algotithms from the config file //
     ParamsR paramsR;
@@ -38,8 +40,8 @@ public:
 
 private:
   // Controller and Filter Class Variables //
-  Control control;
-  Filter filter;
+  Control mControl;
+  Filter mFilter;
 };
 
 } // namespace robot

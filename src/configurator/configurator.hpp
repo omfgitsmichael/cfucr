@@ -6,6 +6,51 @@
 namespace robot
 {
 
+struct ParamsR
+{
+  unsigned int numberLinks = 0;
+  
+  // Robot Parameters //
+  bool enable_gravity_terms = false;
+
+  std::vector<float> m;
+  std::vector<float> l;
+  std::vector<float> lc;
+  
+  // Motor Parameters //
+  std::vector<float> motorInertia;
+  std::vector<unsigned int> gearRatio;
+};
+
+struct ParamsC
+{
+  unsigned int numberLinks = 0;
+
+  // Control Parameters //
+  bool enable_adaptive = false;
+  bool enable_robust = false;
+  bool enable_pd = true;
+
+  float delt = 0.0f;
+  float rho = 0.0f;
+  float epsilon = 0.0f;
+
+  std::vector<float> K;
+  std::vector<float> mLambda;
+  std::vector<float> mGamma;
+};
+
+struct ParamsF
+{
+  unsigned int numberLinks = 0;
+
+  // Filter Parameters //
+  std::vector<float> alphaQ;
+  std::vector<float> alphadQ;
+  
+  unsigned int filterOrder;
+};
+
 namespace configurator
 {
 

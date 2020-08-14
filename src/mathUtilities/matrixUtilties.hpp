@@ -1,7 +1,7 @@
 #ifndef MATRIX_UTILITIES_HPP_
 #define MATRIX_UTILITIES_HPP_
 
-#include <Eigen/Dense>
+#include "thirdParty/eigen/Eigen/Dense"
 namespace robot
 {
 // Matrices and Vectors Used by the Robotic Manipulator //

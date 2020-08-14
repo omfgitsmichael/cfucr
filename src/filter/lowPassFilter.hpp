@@ -30,11 +30,11 @@ public:
   void registerLowPass(std::string id);
 
 private:
-  std::vector<float> alphaQ;
-  std::vector<float> alphadQ;
-  std::vector<std::vector<float>> previousIntegralOutputQ;
-  std::vector<std::vector<float>> previousIntegralOutputdQ;
-  unsigned int filterOrder;
+  std::vector<float> mAlphaQ;
+  std::vector<float> mAlphadQ;
+  std::vector<std::vector<float>> mPreviousIntegralOutputQ;
+  std::vector<std::vector<float>> mPreviousIntegralOutputdQ;
+  unsigned int mFilterOrder;
 };
 
 } // namespace robot

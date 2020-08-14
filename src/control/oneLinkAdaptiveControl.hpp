@@ -20,8 +20,9 @@ public:
   ~oneLinkAdaptiveControl()
   {
   }
+  
   // One Link Adaptive Control //
-  void execute(sharedOneLinkRobot& robot, const float theta_d, const float dtheta_d, const float ddtheta_d);
+  void execute(sharedOneLinkRobot& robot);
 
   // Functions to Calculate Regressor Matrix //
   Matrix1x2F oneLinkRegressor(sharedOneLinkRobot& robot, const float& v, const float& a);
