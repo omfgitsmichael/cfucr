@@ -1,0 +1,6 @@
+[submodule "src/thirdParty/eigen"]
+	path = src/thirdParty/eigen
+	url = git@github.com:omfgitsmichael/eigen.git
+[submodule "src/thirdParty/tinyxml2"]
+	path = src/thirdParty/tinyxml2
+	url = git@github.com:omfgitsmichael/tinyxml2.git
