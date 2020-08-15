@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "thirdParty/tinyxml2/tinyxml2.h"
+
 namespace robot
 {
 
@@ -11,7 +13,7 @@ struct ParamsR
   unsigned int numberLinks = 0;
   
   // Robot Parameters //
-  bool enable_gravity_terms = false;
+  bool enableGravityTerms = false;
 
   std::vector<float> m;
   std::vector<float> l;
