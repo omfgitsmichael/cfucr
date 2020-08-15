@@ -11,6 +11,7 @@
   </robot>
 
   <filter>
+    <filterType>lowPassFilter</filterType>
     <filterOrder>3</filterOrder>
     <alphaQ>0.88</alphaQ>
     <alphaQ>0.75</alphaQ>
@@ -19,10 +20,9 @@
     <alphadQ>0.90</alphadQ>
     <alphadQ>0.88</alphadQ>
   </filter>
-  
-  <controlType>"adpativeControl"</controlType>
 
   <control>
+    <controlType>adpativeControl</controlType>
     <linearGains>
       <k>5.30325</k>
       <lambda>2.651625</lambda>

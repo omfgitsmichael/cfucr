@@ -17,11 +17,11 @@ public:
   : mControl(std::move(c)), mFilter(std::move(f))
   {
     // Initialize the control and filter algotithms from the config file //
-    ParamsR paramsR;
-    ParamsC paramsC;
-    ParamsF paramsF;
+    ParamsR paramsRobot;
+    ParamsC paramsControl;
+    ParamsF paramsFilter;
 
-    std::tie(ParamsR, ParamsC, ParamsF) = Configurator::initializeParams(configFile);
+    std::tie(paramsRobot, paramsFilter, paramsControl) = Configurator::initializeParams(configFile);
 
     initializeRobot(robot, paramsR);
     initializeControl(paramsC);

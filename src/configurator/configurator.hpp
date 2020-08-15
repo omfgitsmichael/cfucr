@@ -44,6 +44,8 @@ struct ParamsC
 
 struct ParamsF
 {
+  std::string filterType;
+
   unsigned int numberLinks = 0;
 
   // Filter Parameters //
@@ -56,7 +58,14 @@ struct ParamsF
 namespace configurator
 {
 
-std::tuple<ParamsR, ParamsC, ParamsF> initializeParams(const std::string configFile);
+std::tuple<ParamsR, ParamsF, ParamsC> initializeParams(const std::string configFile);
+
+ParamsR configureRobot(tinyxml2::XMLElement* robotConfig, unsigned int& robotLinks);
+
+ParamsF configureFilter(tinyxml2::XMLElement* filterConfig, unsigned int& robotLinks);
+configureLowPassFilter(tinyxml2::XMLElement* filterConfig, ParamsF& paramsFilter);
+
+ParamsC configureControl(tinyxml2::XMLElement* controlConfig, unsigned int& robotLinks);
 
 } // namespace configurator
 } // namespace robot
