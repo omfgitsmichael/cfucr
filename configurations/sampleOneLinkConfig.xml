@@ -3,10 +3,16 @@
 
   <numberLinks>1</numberLinks>
 
+  std::vector<float> motorInertia;
+  std::vector<unsigned int> gearRatio;
+
   <robot>
     <mass>2.0</mass>
     <lengthLink>0.3<lengthLink>
-    <lengthToMass>0.27<lengthToMass> 
+    <lengthToMass>0.27<lengthToMass>
+    <motorInertia>0.0004</motorInertia>
+    <gearRatio>1</gearRatio>
+
     <enableGravityTerms>true<enableGravityTerms>
   </robot>
 

@@ -29,17 +29,20 @@ struct ParamsC
   unsigned int numberLinks = 0;
 
   // Control Parameters //
-  bool enable_adaptive = false;
-  bool enable_robust = false;
-  bool enable_pd = true;
-
+  std::string controlType;
+  float delt;
+  
+  // Robust Control //
   float delt = 0.0f;
   float rho = 0.0f;
   float epsilon = 0.0f;
+  
+  // Adaptive Control //
+  std::vector<float> kAdaptive;
+  std::vector<float> lambda;
+  std::vector<float> gamma;
 
-  std::vector<float> K;
-  std::vector<float> mLambda;
-  std::vector<float> mGamma;
+  // PD Control //
 };
 
 struct ParamsF
@@ -63,9 +66,15 @@ std::tuple<ParamsR, ParamsF, ParamsC> initializeParams(const std::string configF
 ParamsR configureRobot(tinyxml2::XMLElement* robotConfig, unsigned int& robotLinks);
 
 ParamsF configureFilter(tinyxml2::XMLElement* filterConfig, unsigned int& robotLinks);
-configureLowPassFilter(tinyxml2::XMLElement* filterConfig, ParamsF& paramsFilter);
+void configureLowPassFilter(tinyxml2::XMLElement* filterConfig, ParamsF& paramsFilter);
 
 ParamsC configureControl(tinyxml2::XMLElement* controlConfig, unsigned int& robotLinks);
+void configureAdaptiveControl(tinyxml2::XMLElement* controlConfig, ParamsC& paramsControl);
+
+// Helper Functions //
+bool stringToBool(std::string text);
+int xmlToInt(tinyxml2::XMLElement* xmlElement, std::string elementString);
+float xmlToFloat(tinyxml2::XMLElement* xmlElement, std::string elementString);
 
 } // namespace configurator
 } // namespace robot
