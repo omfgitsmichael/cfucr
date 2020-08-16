@@ -129,7 +129,7 @@ void configureAdaptiveControl(tinyxml2::XMLElement* controlConfig, ParamsC& para
   tinyxml2::XMLElement* kAdaptiveElement = linearGainsElement->FirstChildElement("k");
   tinyxml2::XMLElement* lambdaElement = linearGainsElement->FirstChildElement("lambda");
   
-  int n = 0;
+  unsigned int n = 0;
   // Place the Linear Gains Inside of the Params //
   for (int i = 0; i < paramsControl.numberLinks; i++)
   {

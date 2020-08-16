@@ -9,6 +9,8 @@
 namespace robot
 {
 
+static const float GRAVITY = 9.81f;
+
 template <typename Robot, typename Control, typename Filter>
 class Controller
 {
@@ -37,8 +39,14 @@ public:
   void execute(Robot& robot);
 
   void initializeRobot(Robot& robot, ParamsR& params);
+  void initializeOneLink(Robot& robot, ParamsR& params, std::vector<float> I);
+  void initializeTwoLink(Robot& robot, ParamsR& params, std::vector<float> I);
+  void initializeThreeLink(Robot& robot, ParamsR& params, std::vector<float> I);
+
   void initializeControl(ParamsC& params);
+
   void initializeFilter(ParamsF& params);
+  void initializeLowPassFilter(ParamsF& params);
 
 private:
   // Controller and Filter Class Variables //
