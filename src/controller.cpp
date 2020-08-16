@@ -45,7 +45,7 @@ void Controller::initializeRobot(Robot& robot, ParamsR& params)
       robot->motorGearRatio(i,j) = 0.0f;
     }
     
-    // Total inertia for link i = r^2*Jm + Jl //
+    // Total inertia for link i = r^2*Jm + (1/3)*m*l^2 //
     I.push_back(params.gearRatio[i]*params.gearRatio[i]*params.motorInertia[i] + (1.0f/3.0f)*params.m[i]*params.l[i]*params.l[i]);
   }
 
