@@ -20,8 +20,8 @@ using Vector6x1F = Eigen::Matrix<float,6,1>;
 using Vector9x1F = Eigen::Matrix<float,9,1>;
 using Matrix3x6F = Eigen::Matrix<float,3,6>;
 using Matrix3x9F = Eigen::Matrix<float,3,9>;
-using Vector2x1UI = Eiigen::Matrix<unsigned int,2,1>;
-using Vector3x1UI = Eiigen::Matrix<unsigned int,3,1>;
+using Vector2x1UI = Eigen::Matrix<unsigned int,2,1>;
+using Vector3x1UI = Eigen::Matrix<unsigned int,3,1>;
 }
 
 #endif // MATRIX_UTILITIES_HPP_

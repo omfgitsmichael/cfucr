@@ -13,9 +13,11 @@ template <typename Robot, typename Control, typename Filter>
 class Controller
 {
 public:
-  Controller(const std::string configFile, Robot& robot, Control& c, Filter& f)
-  : mControl(std::move(c)), mFilter(std::move(f))
+  Controller(const std::string configFile, Robot& robot)
   {
+    mControl = std::make_shared<Control>();
+    mFilter = std::make_shared<Filter>();
+
     // Initialize the control and filter algotithms from the config file //
     ParamsR paramsRobot;
     ParamsC paramsControl;
@@ -36,12 +38,12 @@ public:
   void initializeControl(ParamsC params);
   void initializeFilter(ParamsF params);
 
-  void execute(Robot robot);
+  void execute(Robot& robot);
 
 private:
   // Controller and Filter Class Variables //
-  Control mControl;
-  Filter mFilter;
+  std::shared_ptr<Control> mControl;
+  std::shared_ptr<Filter> mFilter;
 };
 
 } // namespace robot
