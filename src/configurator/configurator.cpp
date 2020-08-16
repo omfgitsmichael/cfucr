@@ -85,7 +85,8 @@ void configureLowPassFilter(tinyxml2::XMLElement* filterConfig, ParamsF& paramsF
   
   tinyxml2::XMLElement* alphaQElement = filterConfig->FirstChildElement("alphaQ");
   tinyxml2::XMLElement* alphadQElement = filterConfig->FirstChildElement("alphadQ");
-
+  
+  // Place the Alpha Terms Inside of the Params //
   for (int i = 0; i < filterOrder; i++)
   {
     paramsFilter.alphaQ.push_back(xmlToFloat(alphaQElement, "alphaQ"));
@@ -139,6 +140,7 @@ void configureAdaptiveControl(tinyxml2::XMLElement* controlConfig, ParamsC& para
 
   tinyxml2::XMLElement* rateOfAdaptivityElement = controlConfig->FirstChildElement("rateOfAdaptivity");
   tinyxml2::XMLElement* gammaElement = rateOfAdaptivityElement->FirstChildElement("gamma");
+  // Place Rate of Adaptivity Inside the Params //
   for (int i = 0; i < n; i++)
   {
     paramsControl.gamma.push_back(xmlToFloat(gammaElement, "gamma"));
