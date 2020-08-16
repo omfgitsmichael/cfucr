@@ -43,7 +43,7 @@ public:
 
   // General Robot //
   unsigned int numberLinks;
-  Vector3x1UI motorGearRatio;
+  Matrix3x3F motorGearRatio; // Diagonal Matrix of the Gear Ratios //
 };
 
 // Shared Pointer to the Robot //

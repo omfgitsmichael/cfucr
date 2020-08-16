@@ -19,31 +19,31 @@ public:
   ~OneLinkRobot() = default;
 
   // Measured Robot States //
-  float theta;
-  float dtheta;
+  ScalarF theta;
+  ScalarF dtheta;
 
   // Filtered Robot States //
-  float thetaF;
-  float dthetaF;
+  ScalarF thetaF;
+  ScalarF dthetaF;
 
   // State Error //
-  float e;
-  float de;
+  ScalarF e;
+  ScalarF de;
 
   // Desired States //
-  float theta_d;
-  float dtheta_d;
-  float ddtheta_d;
+  ScalarF theta_d;
+  ScalarF dtheta_d;
+  ScalarF ddtheta_d;
 
   // Dynamic Parameters Estimates //
   Vector2x1F parameters;
 
   // Control //
-  float u;
+  ScalarF u;
 
   // General Robot //
   unsigned int numberLinks;
-  unsigned int motorGearRatio;
+  ScalarF motorGearRatio; // Diagonal Matrix of the Gear Ratios //
 };
 
 // Shared Pointer to the Robot //

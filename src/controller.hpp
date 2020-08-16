@@ -34,11 +34,11 @@ public:
   {
   }
 
+  void execute(Robot& robot);
+
   void initializeRobot(Robot& robot, ParamsR& params);
   void initializeControl(ParamsC& params);
   void initializeFilter(ParamsF& params);
-
-  void execute(Robot& robot);
 
 private:
   // Controller and Filter Class Variables //

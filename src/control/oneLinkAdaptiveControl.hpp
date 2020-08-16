@@ -25,22 +25,21 @@ public:
   void execute(sharedOneLinkRobot& robot);
 
   // Functions to Calculate Regressor Matrix //
-  Matrix1x2F oneLinkRegressor(sharedOneLinkRobot& robot, const float& v, const float& a);
+  Matrix1x2F oneLinkRegressor(sharedOneLinkRobot& robot, ScalarF& v, ScalarF& a);
 
   // Functions to Calculate Passivity Terms //
-  float calculateOneLinkV(sharedOneLinkRobot& robot);
-  float calculateOneLinkA(sharedOneLinkRobot& robot);
-  float calculateOneLinkR(sharedOneLinkRobot& robot);
+  ScalarF calculateOneLinkV(sharedOneLinkRobot& robot);
+  ScalarF calculateOneLinkA(sharedOneLinkRobot& robot);
+  ScalarF calculateOneLinkR(sharedOneLinkRobot& robot);
 
   // Register the Class //
   void registerOneLinkAdaptive(std::string id);
 
 private:
-  float mK;
-  float mLambda;
+  ScalarF mK;
+  ScalarF mLambda;
   Matrix2x2F mGamma;
-  float mDelt;
-
+  ScalarF mDelt;
 };
 
 } // namespace robot

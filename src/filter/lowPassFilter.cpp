@@ -7,12 +7,12 @@ template <typename Robot>
 void lowPassFilter::execute(Robot& robot)
 {
   // Nested for loop between the number of robot links and filter order //
-  for (unsigned int j = 0; j < robot->numberLinks; j++)
+  for (unsigned int i = 0; i < robot->numberLinks; i++)
   {
-    for (unsigned int k = 0; k < mFilterOrder; k++)
+    for (unsigned int j = 0; j < mFilterOrder; j++)
     {
-      robot->thetaF(j) = filter(robot->theta(j), mPreviousIntegralOutputQ[j][k], mAlphaQ[k]);
-      robot->dthetaF(j) = filter(robot->dtheta(j), mPreviousIntegralOutputdQ[j][k], mAlphadQ[k]);
+      robot->thetaF(i) = filter(robot->theta(i), mPreviousIntegralOutputQ[i][j], mAlphaQ[j]);
+      robot->dthetaF(i) = filter(robot->dtheta(i), mPreviousIntegralOutputdQ[i][j], mAlphadQ[j]);
     }
   }
 }
