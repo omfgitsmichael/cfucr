@@ -34,9 +34,9 @@ public:
   {
   }
 
-  void initializeRobot(Robot& robot, ParamsR params);
-  void initializeControl(ParamsC params);
-  void initializeFilter(ParamsF params);
+  void initializeRobot(Robot& robot, ParamsR& params);
+  void initializeControl(ParamsC& params);
+  void initializeFilter(ParamsF& params);
 
   void execute(Robot& robot);
 
