@@ -37,12 +37,7 @@ void Controller::initializeRobot(Robot& robot, ParamsR& params)
     
     for (j = 0; j < robot->numberLinks; j++)
     {
-      if (i == j)
-      {
-        robot->motorGearRatio(i,j) = params.gearRatio[i];
-        continue;
-      }
-      robot->motorGearRatio(i,j) = 0.0f;
+      robot->motorGearRatio(i,j) = (i == j) ? params.gearRatio[i] : 0.0f;
     }
     
     // Total inertia for link i = r^2*Jm + (1/3)*m*l^2 //
@@ -118,6 +113,36 @@ void Controller::initializeThreeLink(Robot& robot, ParamsR& params, std::vector<
     robot->p(6) = 0.0f;
     robot->p(7) = 0.0f;
     robot->p(8) = 0.0f;
+  }
+}
+
+void Controller::initializeControl(ParamsC& params)
+{
+  if (params.controlType.compare("adpativeControl") > 0)
+  {
+    initializeAdaptiveControl(params);
+  }
+}
+
+void Controller::initializeAdaptiveControl(ParamsC& params)
+{
+  mControl->mDelt = params.delt;
+
+  for (unsigned int i = 0; i < params.numberLinks; i++)
+  {
+    for (unsigned int j = 0; j < params.numberLinks; j++)
+    {
+      mControl->mK(i,j) = (i == j) ? params.kAdaptive[i] : 0.0f;
+      mControl->mLambda(i,j) = (i == j) ? params.lambda[i] : 0.0f;
+    }
+  }
+
+  for (unsigned int i = 0; i < params.gamma.size(); i++)
+  {
+    for (unsigned int j = 0; j < params.gamma.size(); j++)
+    {
+      mControl->mGamma(i,j) = (i == j) ? params.gamma[i] : 0.0f;
+    }
   }
 }
 

@@ -44,6 +44,7 @@ public:
   void initializeThreeLink(Robot& robot, ParamsR& params, std::vector<float> I);
 
   void initializeControl(ParamsC& params);
+  void initializeAdaptiveControl(ParamsC& params);
 
   void initializeFilter(ParamsF& params);
   void initializeLowPassFilter(ParamsF& params);

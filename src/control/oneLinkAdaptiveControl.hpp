@@ -39,7 +39,7 @@ private:
   ScalarF mK;
   ScalarF mLambda;
   Matrix2x2F mGamma;
-  ScalarF mDelt;
+  float mDelt;
 };
 
 } // namespace robot
