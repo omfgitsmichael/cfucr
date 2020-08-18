@@ -1,9 +1,9 @@
-#include "control/oneLinkAdaptiveControl.hpp"
+#include "control/oneLinkRobustControl.hpp"
 
 namespace robot
 {
-// One link adaptive control //
-void oneLinkAdaptiveControl::execute(sharedOneLinkRobot& robot)
+// One link robust control //
+void oneLinkRobustControl::execute(sharedOneLinkRobot& robot)
 {
   // Calculate and save the error //
   ScalarF e = robot->thetaF - robot->theta_d;
@@ -21,12 +21,14 @@ void oneLinkAdaptiveControl::execute(sharedOneLinkRobot& robot)
   Matrix1x2F Y = oneLinkRegressor(robot, v, a);
 
   // Update the estimated parameters //
-  Vector2x1F F = -mGamma.inverse()*Y.transpose()*r;
-  Vector2x1F p = robot->parameters + F*mDelt;
-  robot->parameters = p;
+
+  Vector2x1F F = Y.transpose()*r;
+  float normF = std::sqrt(F(0)*F(0) + F(1)*F(1));
+
+  Vector2x1F delp = normF > mEpsilon ? -mRho*Y.transpose()*r/normF : -(mRho/mEpsilon)*Y.transpose()*r;
 
   // Calculate the motor control torque for each link //
-  robot->u = robot->motorGearRatio.inverse()*(Y*p - mK*r);
+  robot->u = robot->motorGearRatio.inverse()*(Y*(robot->parameters + delp) - mK*r);
 }
 
 } // namespace robot

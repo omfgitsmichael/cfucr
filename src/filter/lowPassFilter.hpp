@@ -8,8 +8,7 @@
 
 namespace robot
 {
-static const char *lowPass = "lowPass";
-
+  
 template <typename Robot>
 class lowPassFilter
 {
@@ -25,9 +24,6 @@ public:
   // Low Pass Filter //
   void execute(Robot& robot);
   float filter(float& y, float& yInt, float& alpha);
-
-  // Register the Class //
-  void registerLowPass(std::string id);
 
 private:
   std::vector<float> mAlphaQ;
