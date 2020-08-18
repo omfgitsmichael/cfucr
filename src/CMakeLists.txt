@@ -1,3 +1,8 @@
+# Add controller main files #
+add_library(controller-libs
+  controller.cpp
+)
+
 # Add a list of subdirectories #
 add_subdirectory(configurator)
 add_subdirectory(control)
