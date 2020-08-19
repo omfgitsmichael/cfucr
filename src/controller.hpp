@@ -15,7 +15,7 @@ template <typename Robot, typename Control, typename Filter>
 class Controller
 {
 public:
-  Controller(const std::string configFile, Robot& robot)
+  Controller(const char* configFile, Robot& robot)
   {
     mControl = std::make_shared<Control>();
     mFilter = std::make_shared<Filter>();

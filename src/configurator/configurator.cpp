@@ -5,17 +5,17 @@ namespace robot
 namespace configurator
 {
 
-std::tuple<ParamsR, ParamsF, ParamsC> initializeParams(const std::string configFile)
+std::tuple<ParamsR, ParamsF, ParamsC> initializeParams(const char* configFile)
 {
   // Load and Parse the Config File //
   tinyxml2::XMLDocument config;
-  config.LoadFile(configFile);
+  tinyxml2::XMLError error = config.LoadFile(configFile);
 
   // Get the Root Element of the Config File //
-  tinyxml::XMLElement* controllerConfig = config.FirstChildElement("Controller");
+  tinyxml2::XMLElement* controllerConfig = config.FirstChildElement("Controller");
 
   std::string robotLinksString = controllerConfig->FirstChildElement("numberLinks")->GetText();
-  const unsigned int robotLinks = std::stoi(robotLinksString);
+  unsigned int robotLinks = std::stoi(robotLinksString);
 
   tinyxml2::XMLElement* robotConfig = controllerConfig->FirstChildElement("robot");
   tinyxml2::XMLElement* controlConfig = controllerConfig->FirstChildElement("control");
@@ -28,7 +28,7 @@ std::tuple<ParamsR, ParamsF, ParamsC> initializeParams(const std::string configF
   return std::make_tuple(paramsRobot, paramsFilter, paramsControl);
 }
 
-ParamsR configureRobot(tinyxml2::XMLElement* robotConfig, const unsigned int& robotLinks)
+ParamsR configureRobot(tinyxml2::XMLElement* robotConfig, unsigned int& robotLinks)
 {
   ParamsR paramsRobot;
 
@@ -37,25 +37,25 @@ ParamsR configureRobot(tinyxml2::XMLElement* robotConfig, const unsigned int& ro
   std::string enableGravityTermsString = robotConfig->FirstChildElement("enableGravityTerms")->GetText();
   paramsRobot.enableGravityTerms = stringToBool(enableGravityTermsString);
 
-  tinyxml2::XMLElement* massElement = filterConfig->FirstChildElement("mass");
-  tinyxml2::XMLElement* lengthLinkElement = filterConfig->FirstChildElement("lengthLink");
-  tinyxml2::XMLElement* lengthToMassElement = filterConfig->FirstChildElement("lengthToMass");
-  tinyxml2::XMLElement* motorInertiaElement = filterConfig->FirstChildElement("motorInertia");
-  tinyxml2::XMLElement* gearRatioElement = filterConfig->FirstChildElement("gearRatio");
+  tinyxml2::XMLElement* massElement = robotConfig->FirstChildElement("mass");
+  tinyxml2::XMLElement* lengthLinkElement = robotConfig->FirstChildElement("lengthLink");
+  tinyxml2::XMLElement* lengthToMassElement = robotConfig->FirstChildElement("lengthToMass");
+  tinyxml2::XMLElement* motorInertiaElement = robotConfig->FirstChildElement("motorInertia");
+  tinyxml2::XMLElement* gearRatioElement = robotConfig->FirstChildElement("gearRatio");
 
   for (int i = 0; i < robotLinks; i++)
   {
-    paramsFilter.m.push_back(xmlToFloat(massElement, "mass"));
-    paramsFilter.l.push_back(xmlToFloat(lengthLinkElement, "lengthLink"));
-    paramsFilter.lc.push_back(xmlToFloat(lengthToMassElement, "lengthToMass"));
-    paramsFilter.motorInertia.push_back(xmlToFloat(motorInertiaElement, "motorInertia"));
-    paramsFilter.gearRatio.push_back(xmlToInt(gearRatioElement, "gearRatio"));
+    paramsRobot.m.push_back(xmlToFloat(massElement, "mass"));
+    paramsRobot.l.push_back(xmlToFloat(lengthLinkElement, "lengthLink"));
+    paramsRobot.lc.push_back(xmlToFloat(lengthToMassElement, "lengthToMass"));
+    paramsRobot.motorInertia.push_back(xmlToFloat(motorInertiaElement, "motorInertia"));
+    paramsRobot.gearRatio.push_back(xmlToInt(gearRatioElement, "gearRatio"));
   }
 
   return paramsRobot;
 }
 
-ParamsF configureFilter(tinyxml2::XMLElement* filterConfig, const unsigned int& robotLinks)
+ParamsF configureFilter(tinyxml2::XMLElement* filterConfig, unsigned int& robotLinks)
 {
   ParamsF paramsFilter;
 
@@ -89,7 +89,7 @@ void configureLowPassFilter(tinyxml2::XMLElement* filterConfig, ParamsF& paramsF
   }
 }
 
-ParamsC configureControl(tinyxml2::XMLElement* controlConfig, const unsigned int& robotLinks)
+ParamsC configureControl(tinyxml2::XMLElement* controlConfig, unsigned int& robotLinks)
 {
   ParamsC paramsControl;
 
@@ -160,8 +160,8 @@ void configureRobustControl(tinyxml2::XMLElement* controlConfig, ParamsC& params
   tinyxml2::XMLElement* epsilonElement = parameterNoiseElement->FirstChildElement("epsilon");
   
   // Grab the parameter noise terms //
-  paramsControl.rho.push_back(xmlToFloat(rhoElement, "rho"));
-  paramsControl.epsilon.push_back(xmlToFloat(epsilonElement, "epsilon"));
+  paramsControl.rho = xmlToFloat(rhoElement, "rho");
+  paramsControl.epsilon = xmlToFloat(epsilonElement, "epsilon");
 }
 
 void configurePDControl(tinyxml2::XMLElement* controlConfig, ParamsC& paramsControl)
@@ -189,7 +189,7 @@ bool stringToBool(std::string text)
   return result;
 }
 
-int xmlToInt(tinyxml2::XMLElement* xmlElement, std::string elementString)
+int xmlToInt(tinyxml2::XMLElement* xmlElement, const char* elementString)
 {
   std::string elementText = xmlElement->GetText();
   int value = std::stoi(elementText);
@@ -198,7 +198,7 @@ int xmlToInt(tinyxml2::XMLElement* xmlElement, std::string elementString)
   return value;
 }
 
-float xmlToFloat(tinyxml2::XMLElement* xmlElement, std::string elementString)
+float xmlToFloat(tinyxml2::XMLElement* xmlElement, const char* elementString)
 {
   std::string elementText = xmlElement->GetText();
   float value = std::stof(elementText);

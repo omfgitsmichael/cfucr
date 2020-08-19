@@ -4,7 +4,7 @@ namespace robot
 {
 // Execute Low Pass Filter //
 template <typename Robot>
-void lowPassFilter::execute(Robot& robot)
+void lowPassFilter<Robot>::execute(Robot& robot)
 {
   // Nested for loop between the number of robot links and filter order //
   for (unsigned int i = 0; i < robot->numberLinks; i++)

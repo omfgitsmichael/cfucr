@@ -2,6 +2,8 @@
 #define CONFIGURATOR_HPP_
 
 #include <string>
+#include <tuple>
+#include <vector>
 
 #include "thirdParty/tinyxml2/tinyxml2.h"
 
@@ -30,7 +32,6 @@ struct ParamsC
 
   // Control Parameters //
   std::string controlType;
-  float delt;
 
   // Linear Control Gain Adaptive/Robust //
   std::vector<float> k;
@@ -65,7 +66,7 @@ struct ParamsF
 namespace configurator
 {
 
-std::tuple<ParamsR, ParamsF, ParamsC> initializeParams(const std::string configFile);
+std::tuple<ParamsR, ParamsF, ParamsC> initializeParams(const char* configFile);
 
 ParamsR configureRobot(tinyxml2::XMLElement* robotConfig, unsigned int& robotLinks);
 
