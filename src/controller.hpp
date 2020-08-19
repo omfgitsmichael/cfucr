@@ -46,6 +46,7 @@ public:
   void initializeControl(ParamsC& params);
   void initializeAdaptiveControl(ParamsC& params);
   void initializeRobustControl(ParamsC& params);
+  void initializePDControl(ParamsC& params);
 
   void initializeFilter(ParamsF& params);
   void initializeLowPassFilter(ParamsF& params);

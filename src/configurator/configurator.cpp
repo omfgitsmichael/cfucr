@@ -5,11 +5,6 @@ namespace robot
 namespace configurator
 {
 
-// tinyxml2 helper functions while creating this:
-// FirstChildElement("name") grabs the first element of that name. returns a pointer to an XMLElement
-// NextSiblingElement("name") grabs the next element of that name. returns a pointer to an XMLElement
-// GetText() gets the text value of the element.
-
 std::tuple<ParamsR, ParamsF, ParamsC> initializeParams(const std::string configFile)
 {
   // Load and Parse the Config File //
@@ -113,7 +108,7 @@ ParamsC configureControl(tinyxml2::XMLElement* controlConfig, const unsigned int
   }
   else if (controlType.compare("pdControl") > 0)
   {
-    // Populate PD Control Configs //
+    configurePDControl(controlConfig, paramsControl);
   }
 
   return paramsControl;
@@ -153,13 +148,11 @@ void configureRobustControl(tinyxml2::XMLElement* controlConfig, ParamsC& params
   tinyxml2::XMLElement* kElement = linearGainsElement->FirstChildElement("k");
   tinyxml2::XMLElement* lambdaElement = linearGainsElement->FirstChildElement("lambda");
   
-  unsigned int n = 0;
   // Place the Linear Gains Inside of the Params //
   for (int i = 0; i < paramsControl.numberLinks; i++)
   {
     paramsControl.k.push_back(xmlToFloat(kElement, "k"));
     paramsControl.lambda.push_back(xmlToFloat(lambdaElement, "lambda"));
-    n = n+i+1;
   }
 
   tinyxml2::XMLElement* parameterNoiseElement = controlConfig->FirstChildElement("parameterNoise");
@@ -169,6 +162,20 @@ void configureRobustControl(tinyxml2::XMLElement* controlConfig, ParamsC& params
   // Grab the parameter noise terms //
   paramsControl.rho.push_back(xmlToFloat(rhoElement, "rho"));
   paramsControl.epsilon.push_back(xmlToFloat(epsilonElement, "epsilon"));
+}
+
+void configurePDControl(tinyxml2::XMLElement* controlConfig, ParamsC& paramsControl)
+{
+  tinyxml2::XMLElement* linearGainsElement = controlConfig->FirstChildElement("linearGains");
+  tinyxml2::XMLElement* kpElement = linearGainsElement->FirstChildElement("kp");
+  tinyxml2::XMLElement* kdElement = linearGainsElement->FirstChildElement("kd");
+  
+  // Place the Linear Gains Inside of the Params //
+  for (int i = 0; i < paramsControl.numberLinks; i++)
+  {
+    paramsControl.kp.push_back(xmlToFloat(kpElement, "kp"));
+    paramsControl.kd.push_back(xmlToFloat(kdElement, "kd"));
+  }
 }
 
 bool stringToBool(std::string text)

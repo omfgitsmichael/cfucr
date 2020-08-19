@@ -3,4 +3,5 @@ add_library(control-libs
   controlUtilities.cpp
   oneLinkAdaptiveControl.cpp
   oneLinkRobustControl.cpp
+  pdControl.cpp
 )

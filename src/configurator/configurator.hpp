@@ -32,7 +32,7 @@ struct ParamsC
   std::string controlType;
   float delt;
 
-  // Linear Control Gain //
+  // Linear Control Gain Adaptive/Robust //
   std::vector<float> k;
   
   // Robust Control //
@@ -45,6 +45,8 @@ struct ParamsC
   std::vector<float> gamma;
 
   // PD Control //
+  std::vector<float> kp;
+  std::vector<float> kd;
 };
 
 struct ParamsF
@@ -73,6 +75,7 @@ void configureLowPassFilter(tinyxml2::XMLElement* filterConfig, ParamsF& paramsF
 ParamsC configureControl(tinyxml2::XMLElement* controlConfig, unsigned int& robotLinks);
 void configureAdaptiveControl(tinyxml2::XMLElement* controlConfig, ParamsC& paramsControl);
 void configureRobustControl(tinyxml2::XMLElement* controlConfig, ParamsC& paramsControl);
+void configurePDControl(tinyxml2::XMLElement* controlConfig, ParamsC& paramsControl);
 
 // Helper Functions //
 bool stringToBool(std::string text);

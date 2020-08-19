@@ -6,11 +6,8 @@ namespace robot
 void oneLinkAdaptiveControl::execute(sharedOneLinkRobot& robot)
 {
   // Calculate and save the error //
-  ScalarF e = robot->thetaF - robot->theta_d;
-  ScalarF de = robot->dthetaF - robot->dtheta_d;
-
-  robot->e = e;
-  robot->de = de;
+  robot->e = robot->thetaF - robot->theta_d;
+  robot->de = robot->dthetaF - robot->dtheta_d;
 
   // Calculate passivity terms //
   ScalarF v = calculateV(robot, mLambda);
