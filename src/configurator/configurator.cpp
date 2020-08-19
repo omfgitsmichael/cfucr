@@ -109,7 +109,7 @@ ParamsC configureControl(tinyxml2::XMLElement* controlConfig, const unsigned int
   }
   else if (controlType.compare("robustControl") > 0)
   {
-    // Populate Robust Control Configs //
+    configureRobustControl(controlConfig, paramsControl);
   }
   else if (controlType.compare("pdControl") > 0)
   {
@@ -126,14 +126,14 @@ void configureAdaptiveControl(tinyxml2::XMLElement* controlConfig, ParamsC& para
   paramsControl.delt = std::stof(deltString);
 
   tinyxml2::XMLElement* linearGainsElement = controlConfig->FirstChildElement("linearGains");
-  tinyxml2::XMLElement* kAdaptiveElement = linearGainsElement->FirstChildElement("k");
+  tinyxml2::XMLElement* kElement = linearGainsElement->FirstChildElement("k");
   tinyxml2::XMLElement* lambdaElement = linearGainsElement->FirstChildElement("lambda");
   
   unsigned int n = 0;
   // Place the Linear Gains Inside of the Params //
   for (int i = 0; i < paramsControl.numberLinks; i++)
   {
-    paramsControl.kAdaptive.push_back(xmlToFloat(kAdaptiveElement, "k"));
+    paramsControl.k.push_back(xmlToFloat(kElement, "k"));
     paramsControl.lambda.push_back(xmlToFloat(lambdaElement, "lambda"));
     n = n+i+1;
   }
@@ -145,6 +145,30 @@ void configureAdaptiveControl(tinyxml2::XMLElement* controlConfig, ParamsC& para
   {
     paramsControl.gamma.push_back(xmlToFloat(gammaElement, "gamma"));
   }
+}
+
+void configureRobustControl(tinyxml2::XMLElement* controlConfig, ParamsC& paramsControl)
+{
+  tinyxml2::XMLElement* linearGainsElement = controlConfig->FirstChildElement("linearGains");
+  tinyxml2::XMLElement* kElement = linearGainsElement->FirstChildElement("k");
+  tinyxml2::XMLElement* lambdaElement = linearGainsElement->FirstChildElement("lambda");
+  
+  unsigned int n = 0;
+  // Place the Linear Gains Inside of the Params //
+  for (int i = 0; i < paramsControl.numberLinks; i++)
+  {
+    paramsControl.k.push_back(xmlToFloat(kElement, "k"));
+    paramsControl.lambda.push_back(xmlToFloat(lambdaElement, "lambda"));
+    n = n+i+1;
+  }
+
+  tinyxml2::XMLElement* parameterNoiseElement = controlConfig->FirstChildElement("parameterNoise");
+  tinyxml2::XMLElement* rhoElement = parameterNoiseElement->FirstChildElement("rho");
+  tinyxml2::XMLElement* epsilonElement = parameterNoiseElement->FirstChildElement("epsilon");
+  
+  // Grab the parameter noise terms //
+  paramsControl.rho.push_back(xmlToFloat(rhoElement, "rho"));
+  paramsControl.epsilon.push_back(xmlToFloat(epsilonElement, "epsilon"));
 }
 
 bool stringToBool(std::string text)

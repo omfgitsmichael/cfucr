@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Controller>
+
+  <numberLinks>1</numberLinks>
+
+  std::vector<float> motorInertia;
+  std::vector<unsigned int> gearRatio;
+
+  <robot>
+    <mass>2.0</mass>
+    <lengthLink>0.3<lengthLink>
+    <lengthToMass>0.27<lengthToMass>
+    <motorInertia>0.0004</motorInertia>
+    <gearRatio>1.0</gearRatio>
+
+    <enableGravityTerms>true<enableGravityTerms>
+  </robot>
+
+  <filter>
+    <filterType>lowPassFilter</filterType>
+    <filterOrder>3</filterOrder>
+    <alphaQ>0.88</alphaQ>
+    <alphaQ>0.75</alphaQ>
+    <alphaQ>0.75</alphaQ>
+    <alphadQ>0.92</alphadQ>
+    <alphadQ>0.90</alphadQ>
+    <alphadQ>0.88</alphadQ>
+  </filter>
+
+  <control>
+    <controlType>robustControl</controlType>
+    <linearGains>
+      <k>5.30325</k>
+      <lambda>2.651625</lambda>
+    </linearGains>
+    <parameterNoise>
+      <rho>1.0</rho>
+      <epsilon>1e-3</epsilon>
+    </parameterNoise>
+  </control>
+
+</Controller>

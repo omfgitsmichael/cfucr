@@ -122,6 +122,10 @@ void Controller::initializeControl(ParamsC& params)
   {
     initializeAdaptiveControl(params);
   }
+  else if (params.controlType.compare("robustControl") > 0)
+  {
+    initializeRobustControl(params);
+  }
 }
 
 void Controller::initializeAdaptiveControl(ParamsC& params)
@@ -142,6 +146,21 @@ void Controller::initializeAdaptiveControl(ParamsC& params)
     for (unsigned int j = 0; j < params.gamma.size(); j++)
     {
       mControl->mGamma(i,j) = (i == j) ? params.gamma[i] : 0.0f;
+    }
+  }
+}
+
+void Controller::initializeRobustControl(ParamsC& params)
+{
+  mControl->mRho = params.rho;
+  mControl->mEpsilon = params.epsilon;
+
+  for (unsigned int i = 0; i < params.numberLinks; i++)
+  {
+    for (unsigned int j = 0; j < params.numberLinks; j++)
+    {
+      mControl->mK(i,j) = (i == j) ? params.kAdaptive[i] : 0.0f;
+      mControl->mLambda(i,j) = (i == j) ? params.lambda[i] : 0.0f;
     }
   }
 }
