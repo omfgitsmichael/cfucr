@@ -80,8 +80,8 @@ void configurePDControl(tinyxml2::XMLElement* controlConfig, ParamsC& paramsCont
 
 // Helper Functions //
 bool stringToBool(std::string text);
-int xmlToInt(tinyxml2::XMLElement* xmlElement, std::string elementString);
-float xmlToFloat(tinyxml2::XMLElement* xmlElement, std::string elementString);
+int xmlToInt(tinyxml2::XMLElement* xmlElement, const char* elementString);
+float xmlToFloat(tinyxml2::XMLElement* xmlElement, const char* elementString);
 
 } // namespace configurator
 } // namespace robot
