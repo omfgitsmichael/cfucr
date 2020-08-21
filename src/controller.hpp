@@ -18,9 +18,6 @@ class Controller
 public:
   Controller(const char* configFile, Robot& robot)
   {
-    mControl = std::make_shared<Control>();
-    mFilter = std::make_shared<Filter>();
-
     // Initialize the control and filter algotithms from the config file //
     ParamsR paramsRobot;
     ParamsC paramsControl;
@@ -158,14 +155,14 @@ public:
 
   void initializeAdaptiveControl(ParamsC& params)
   {
-    mControl->mDelt = params.delt;
+    mControl.mDelt = params.delt;
 
     for (unsigned int i = 0; i < params.numberLinks; i++)
     {
       for (unsigned int j = 0; j < params.numberLinks; j++)
       {
-        mControl->mK(i,j) = (i == j) ? params.k[i] : 0.0f;
-        mControl->mLambda(i,j) = (i == j) ? params.lambda[i] : 0.0f;
+        mControl.mK(i,j) = (i == j) ? params.k[i] : 0.0f;
+        mControl.mLambda(i,j) = (i == j) ? params.lambda[i] : 0.0f;
       }
     }
 
@@ -173,22 +170,22 @@ public:
     {
       for (unsigned int j = 0; j < params.gamma.size(); j++)
       {
-        mControl->mGamma(i,j) = (i == j) ? params.gamma[i] : 0.0f;
+        mControl.mGamma(i,j) = (i == j) ? params.gamma[i] : 0.0f;
       }
     }
   }
 
   void initializeRobustControl(ParamsC& params)
   {
-    mControl->mRho = params.rho;
-    mControl->mEpsilon = params.epsilon;
+    mControl.mRho = params.rho;
+    mControl.mEpsilon = params.epsilon;
 
     for (unsigned int i = 0; i < params.numberLinks; i++)
     {
       for (unsigned int j = 0; j < params.numberLinks; j++)
       {
-        mControl->mK(i,j) = (i == j) ? params.k[i] : 0.0f;
-        mControl->mLambda(i,j) = (i == j) ? params.lambda[i] : 0.0f;
+        mControl.mK(i,j) = (i == j) ? params.k[i] : 0.0f;
+        mControl.mLambda(i,j) = (i == j) ? params.lambda[i] : 0.0f;
       }
     }
   }
@@ -199,8 +196,8 @@ public:
     {
       for (unsigned int j = 0; j < params.numberLinks; j++)
       {
-        mControl->mKp(i,j) = (i == j) ? params.kp[i] : 0.0f;
-        mControl->mKd(i,j) = (i == j) ? params.kd[i] : 0.0f;
+        mControl.mKp(i,j) = (i == j) ? params.kp[i] : 0.0f;
+        mControl.mKd(i,j) = (i == j) ? params.kd[i] : 0.0f;
       }
     }
   }
@@ -215,30 +212,30 @@ public:
 
   void initializeLowPassFilter(ParamsF& params)
   {
-    mFilter->mFilterOrder = params.filterOrder;
+    mFilter.mFilterOrder = params.filterOrder;
 
     // Nested for loop between the number of robot links and filter order and initialize //
     for (unsigned int i = 0; i < params.numberLinks; i++)
     {
-      mFilter->mPreviousIntegralOutputQ.emplace_back();
-      for (unsigned int j = 0; j < mFilter->mFilterOrder; j++)
+      mFilter.mPreviousIntegralOutputQ.emplace_back();
+      for (unsigned int j = 0; j < mFilter.mFilterOrder; j++)
       {
-        mFilter->mPreviousIntegralOutputQ[i].push_back(0.0f);
-        mFilter->mPreviousIntegralOutputdQ[i].push_back(0.0f);
+        mFilter.mPreviousIntegralOutputQ[i].push_back(0.0f);
+        mFilter.mPreviousIntegralOutputdQ[i].push_back(0.0f);
       }
     }
 
-    for (unsigned int i = 0; i < mFilter->mFilterOrder; i++)
+    for (unsigned int i = 0; i < mFilter.mFilterOrder; i++)
     {
-      mFilter->mAlphaQ.push_back(params.alphaQ[i]);
-      mFilter->mAlphadQ.push_back(params.alphadQ[i]);
+      mFilter.mAlphaQ.push_back(params.alphaQ[i]);
+      mFilter.mAlphadQ.push_back(params.alphadQ[i]);
     }
   }
 
 private:
   // Controller and Filter Class Variables //
-  std::shared_ptr<Control> mControl;
-  std::shared_ptr<Filter> mFilter;
+  Control mControl;
+  Filter mFilter;
 };
 
 } // namespace robot

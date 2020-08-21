@@ -1,5 +1,3 @@
 # Add configurator files #
-add_library(configurator-libs
-  configurator.cpp
-  configurator.hpp
+add_library(configurator-libs INTERFACE
 )

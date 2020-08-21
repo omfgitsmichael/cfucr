@@ -9,6 +9,8 @@ namespace robot
 class oneLinkAdaptiveControl
 {
 public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  
   oneLinkAdaptiveControl()
   {
   }
