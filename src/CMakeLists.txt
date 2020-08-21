@@ -12,7 +12,6 @@ include_directories(
 # Add a list of subdirectories #
 add_subdirectory(configurator)
 add_subdirectory(control)
-add_subdirectory(examples)
 add_subdirectory(filter)
 add_subdirectory(mathUtilities)
 add_subdirectory(thirdParty)
@@ -27,3 +26,5 @@ target_link_libraries(cfucr-libs PRIVATE
   tinyxml2
   eigen
 )
+
+add_subdirectory(examples)

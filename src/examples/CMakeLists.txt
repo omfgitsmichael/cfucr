@@ -1,4 +1,4 @@
-# Add controller main files #
+# Add controller example main files #
 add_library(examples-libs
   oneLinkAdaptiveExample.cpp
 )
