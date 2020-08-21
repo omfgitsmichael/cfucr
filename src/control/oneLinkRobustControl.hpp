@@ -20,11 +20,18 @@ public:
   // One link robust control //
   void execute(sharedOneLinkRobot& robot);
 
-private:
+  // Public member variables //
   ScalarF mK;
   ScalarF mLambda;
   float mRho;
   float mEpsilon;
+
+  // Public member variables: not used --  hacky, not sure what else to do //
+  Matrix2x2F mGamma;
+  float mDelt;
+  float mKp;
+  float mKd;
+
 };
 
 } // namespace robot

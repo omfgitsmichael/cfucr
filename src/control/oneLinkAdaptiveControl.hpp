@@ -17,14 +17,21 @@ public:
   {
   }
   
-  // One Link Adaptive Control //
+  // One link adaptive control //
   void execute(sharedOneLinkRobot& robot);
 
-private:
+  // Public member variables //
   ScalarF mK;
   ScalarF mLambda;
   Matrix2x2F mGamma;
   float mDelt;
+
+  // Public member variables: not used --  hacky, not sure what else to do //
+  float mRho;
+  float mEpsilon;
+  ScalarF mKp;
+  ScalarF mKd;
+  
 };
 
 } // namespace robot

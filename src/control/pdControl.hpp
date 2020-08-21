@@ -21,9 +21,18 @@ public:
   // PD control //
   void execute(Robot& robot);
 
-private:
+  // Public member variables //
   Matrix mKp;
   Matrix mKd;
+
+  // Public member variables: not used --  hacky, not sure what else to do //
+  float mRho;
+  float mEpsilon;
+  ScalarF mK;
+  ScalarF mLambda;
+  Matrix2x2F mGamma;
+  float mDelt;
+
 };
 
 } // namespace robot

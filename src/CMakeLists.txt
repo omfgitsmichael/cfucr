@@ -5,8 +5,10 @@ add_library(cfucr-libs
 )
 
 # Add the `src` directory to be included #
+set(CFUCR_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
 include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CFUCR_BASE_DIR}
 )
 
 # Add a list of subdirectories #
@@ -17,7 +19,7 @@ add_subdirectory(mathUtilities)
 add_subdirectory(thirdParty)
 add_subdirectory(types)
 
-target_link_libraries(cfucr-libs PRIVATE
+target_link_libraries(cfucr-libs PUBLIC
   configurator-libs
   control-libs
   filter-libs

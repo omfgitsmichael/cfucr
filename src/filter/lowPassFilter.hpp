@@ -24,8 +24,8 @@ public:
   // Low Pass Filter //
   void execute(Robot& robot);
   float filter(float& y, float& yInt, float& alpha);
-
-private:
+ 
+  // Public Member Variables //
   std::vector<float> mAlphaQ;
   std::vector<float> mAlphadQ;
   std::vector<std::vector<float>> mPreviousIntegralOutputQ;
