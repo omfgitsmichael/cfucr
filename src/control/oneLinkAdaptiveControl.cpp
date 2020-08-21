@@ -10,9 +10,9 @@ void oneLinkAdaptiveControl::execute(sharedOneLinkRobot& robot)
   robot->de = robot->dthetaF - robot->dtheta_d;
 
   // Calculate passivity terms //
-  ScalarF v = calculateV(robot, mLambda);
-  ScalarF a = calculateA(robot, mLambda);
-  ScalarF r = calculateR(robot, mLambda);
+  ScalarF v = calculateV<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+  ScalarF a = calculateA<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+  ScalarF r = calculateR<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
 
   // Calculate regressor matrix //
   Matrix1x2F Y = oneLinkRegressor(robot, v, a);

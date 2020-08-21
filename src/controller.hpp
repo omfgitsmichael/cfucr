@@ -1,6 +1,7 @@
 #ifndef CONTROLLER_HPP_
 #define CONTROLLER_HPP_
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -25,11 +26,11 @@ public:
     ParamsC paramsControl;
     ParamsF paramsFilter;
 
-    std::tie(paramsRobot, paramsFilter, paramsControl) = Configurator::initializeParams(configFile);
+    std::tie(paramsRobot, paramsFilter, paramsControl) = configurator::initializeParams(configFile);
 
-    initializeRobot(robot, paramsR);
-    initializeControl(paramsC);
-    initializeFilter(paramsF);
+    initializeRobot(robot, paramsRobot);
+    initializeControl(paramsControl);
+    initializeFilter(paramsFilter);
   }
 
   ~Controller()

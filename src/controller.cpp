@@ -3,16 +3,16 @@
 namespace robot
 {
 
-template<typename Robot>
-void Controller::execute(Robot& robot)
+template <typename Robot, typename Control, typename Filter>
+void Controller<Robot, Control, Filter>::execute(Robot& robot)
 {
   // Execute the filter and control algorithms //
   mFilter->execute(robot);
   mControl->execute(robot);
 }
 
-template <typename Robot>
-void Controller::initializeRobot(Robot& robot, ParamsR& params)
+template <typename Robot, typename Control, typename Filter>
+void Controller<Robot, Control, Filter>::initializeRobot(Robot& robot, ParamsR& params)
 {
   robot->numberLinks = params.numberLinks;
 
@@ -35,7 +35,7 @@ void Controller::initializeRobot(Robot& robot, ParamsR& params)
 
     robot->u(i) = 0.0f;
     
-    for (j = 0; j < robot->numberLinks; j++)
+    for (unsigned int j = 0; j < robot->numberLinks; j++)
     {
       robot->motorGearRatio(i,j) = (i == j) ? params.gearRatio[i] : 0.0f;
     }
@@ -58,8 +58,8 @@ void Controller::initializeRobot(Robot& robot, ParamsR& params)
   }
 }
 
-template <typename Robot>
-void Controller::initializeOneLink(Robot& robot, ParamsR& params, std::vector<float> I)
+template <typename Robot, typename Control, typename Filter>
+void Controller<Robot, Control, Filter>::initializeOneLink(Robot& robot, ParamsR& params, std::vector<float> I)
 {  
   robot->p(0) = params.m[0]*params.lc[0]*params.lc[0] + I[0];
 
@@ -73,8 +73,8 @@ void Controller::initializeOneLink(Robot& robot, ParamsR& params, std::vector<fl
   }
 }
 
-template <typename Robot>
-void Controller::initializeTwoLink(Robot& robot, ParamsR& params, std::vector<float> I)
+template <typename Robot, typename Control, typename Filter>
+void Controller<Robot, Control, Filter>::initializeTwoLink(Robot& robot, ParamsR& params, std::vector<float> I)
 {
   robot->p(0) = params.m[0]*params.lc[0]*params.lc[0] + params.m[1]*params.l[0]*params.l[0] + I[0];
   robot->p(1) = params.m[1]*params.lc[1]*params.lc[1] + I[1];
@@ -92,8 +92,8 @@ void Controller::initializeTwoLink(Robot& robot, ParamsR& params, std::vector<fl
   }
 }
 
-template <typename Robot>
-void Controller::initializeThreeLink(Robot& robot, ParamsR& params, std::vector<float> I)
+template <typename Robot, typename Control, typename Filter>
+void Controller<Robot, Control, Filter>::initializeThreeLink(Robot& robot, ParamsR& params, std::vector<float> I)
 {
   robot->p(0) = params.m[0]*params.lc[0]*params.lc[0] + params.m[1]*params.l[0]*params.l[0] + params.m[2]*params.l[0]*params.l[0] + I[0];
   robot->p(1) = params.m[1]*params.lc[1]*params.lc[1] + params.m[2]*params.l[1]*params.l[1] + I[1];
@@ -116,7 +116,8 @@ void Controller::initializeThreeLink(Robot& robot, ParamsR& params, std::vector<
   }
 }
 
-void Controller::initializeControl(ParamsC& params)
+template <typename Robot, typename Control, typename Filter>
+void Controller<Robot, Control, Filter>::initializeControl(ParamsC& params)
 {
   if (params.controlType.compare("adpativeControl") > 0)
   {
@@ -132,7 +133,8 @@ void Controller::initializeControl(ParamsC& params)
   }
 }
 
-void Controller::initializeAdaptiveControl(ParamsC& params)
+template <typename Robot, typename Control, typename Filter>
+void Controller<Robot, Control, Filter>::initializeAdaptiveControl(ParamsC& params)
 {
   mControl->mDelt = params.delt;
 
@@ -140,7 +142,7 @@ void Controller::initializeAdaptiveControl(ParamsC& params)
   {
     for (unsigned int j = 0; j < params.numberLinks; j++)
     {
-      mControl->mK(i,j) = (i == j) ? params.kAdaptive[i] : 0.0f;
+      mControl->mK(i,j) = (i == j) ? params.k[i] : 0.0f;
       mControl->mLambda(i,j) = (i == j) ? params.lambda[i] : 0.0f;
     }
   }
@@ -154,7 +156,8 @@ void Controller::initializeAdaptiveControl(ParamsC& params)
   }
 }
 
-void Controller::initializeRobustControl(ParamsC& params)
+template <typename Robot, typename Control, typename Filter>
+void Controller<Robot, Control, Filter>::initializeRobustControl(ParamsC& params)
 {
   mControl->mRho = params.rho;
   mControl->mEpsilon = params.epsilon;
@@ -163,13 +166,14 @@ void Controller::initializeRobustControl(ParamsC& params)
   {
     for (unsigned int j = 0; j < params.numberLinks; j++)
     {
-      mControl->mK(i,j) = (i == j) ? params.kAdaptive[i] : 0.0f;
+      mControl->mK(i,j) = (i == j) ? params.k[i] : 0.0f;
       mControl->mLambda(i,j) = (i == j) ? params.lambda[i] : 0.0f;
     }
   }
 }
 
-void Controller::initializePDControl(ParamsC& params)
+template <typename Robot, typename Control, typename Filter>
+void Controller<Robot, Control, Filter>::initializePDControl(ParamsC& params)
 {
   for (unsigned int i = 0; i < params.numberLinks; i++)
   {
@@ -181,7 +185,8 @@ void Controller::initializePDControl(ParamsC& params)
   }
 }
 
-void Controller::initializeFilter(ParamsF& params)
+template <typename Robot, typename Control, typename Filter>
+void Controller<Robot, Control, Filter>::initializeFilter(ParamsF& params)
 {
   if (params.filterType.compare("lowPassFilter") > 0)
   {
@@ -189,7 +194,8 @@ void Controller::initializeFilter(ParamsF& params)
   }
 }
 
-void Controller::initializeLowPassFilter(ParamsF& params)
+template <typename Robot, typename Control, typename Filter>
+void Controller<Robot, Control, Filter>::initializeLowPassFilter(ParamsF& params)
 {
   mFilter->mFilterOrder = params.filterOrder;
 
