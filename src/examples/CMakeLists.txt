@@ -3,7 +3,7 @@ add_library(examples-libs
   oneLinkAdaptiveExample.cpp
 )
 
-# Make an executable file for one link controllers #
+# Make executable files for controller examples #
 add_executable(oneLinkAdaptive
   oneLinkAdaptiveExample.cpp
 )
