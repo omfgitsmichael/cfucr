@@ -1,3 +1,5 @@
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+
 # Add controller example main files #
 add_library(examples-libs
   oneLinkAdaptiveExample.cpp
