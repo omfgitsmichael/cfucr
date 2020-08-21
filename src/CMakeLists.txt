@@ -18,11 +18,12 @@ add_subdirectory(mathUtilities)
 add_subdirectory(thirdParty)
 add_subdirectory(types)
 
-
 target_link_libraries(cfucr-libs PRIVATE
   configurator-libs
   control-libs
   filter-libs
   math-utilities-libs
   type-libs
+  tinyxml2
+  eigen
 )

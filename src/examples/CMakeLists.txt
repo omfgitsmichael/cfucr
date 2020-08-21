@@ -7,3 +7,8 @@ add_library(examples-libs
 add_executable(oneLinkAdaptive
   oneLinkAdaptiveExample.cpp
 )
+
+target_link_libraries(oneLinkAdaptive PRIVATE
+  cfucr-libs
+  examples-libs
+)
