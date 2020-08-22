@@ -25,7 +25,7 @@
   </filter>
 
   <control>
-    <controlType>adpativeControl</controlType>
+    <controlType>adaptiveControl</controlType>
     <linearGains>
       <k>5.30325</k>
       <lambda>2.651625</lambda>

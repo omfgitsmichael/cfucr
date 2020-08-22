@@ -1,7 +1,5 @@
 # Add controller main files #
-add_library(cfucr-libs
-  controller.cpp
-  controller.hpp
+add_library(cfucr-libs INTERFACE
 )
 
 # Add the `src` directory to be included #
@@ -19,7 +17,7 @@ add_subdirectory(mathUtilities)
 add_subdirectory(thirdParty)
 add_subdirectory(types)
 
-target_link_libraries(cfucr-libs PUBLIC
+target_link_libraries(cfucr-libs INTERFACE
   configurator-libs
   control-libs
   filter-libs

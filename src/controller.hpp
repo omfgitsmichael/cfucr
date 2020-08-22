@@ -24,7 +24,8 @@ public:
     ParamsF paramsFilter;
 
     std::tie(paramsRobot, paramsFilter, paramsControl) = configurator::initializeParams(configFile);
-
+    
+    // Filter and control are not being populated //
     initializeRobot(robot, paramsRobot);
     initializeFilter(paramsFilter);
     initializeControl(paramsControl);
@@ -33,8 +34,6 @@ public:
   ~Controller()
   {
   }
-
-  void execute(Robot& robot);
 
   void initializeRobot(Robot& robot, ParamsR& params)
   {
@@ -140,15 +139,15 @@ public:
   void initializeControl(ParamsC& params)
   {
     mControl.controlType = params.controlType;
-    if (mControl.controlType.compare("adpativeControl") > 0)
+    if (mControl.controlType.compare("adaptiveControl") == 0)
     {
       initializeAdaptiveControl(params);
     }
-    else if (mControl.controlType.compare("robustControl") > 0)
+    else if (mControl.controlType.compare("robustControl") == 0)
     {
       initializeRobustControl(params);
     }
-    else if (mControl.controlType.compare("pdControl") > 0)
+    else if (mControl.controlType.compare("pdControl") == 0)
     {
       initializePDControl(params);
     }
@@ -207,7 +206,7 @@ public:
   {
     mFilter.filterType = params.filterType;
 
-    if (mFilter.filterType.compare("lowPassFilter") > 0)
+    if (mFilter.filterType.compare("lowPassFilter") == 0)
     {
       initializeLowPassFilter(params);
     }
@@ -221,6 +220,7 @@ public:
     for (unsigned int i = 0; i < params.numberLinks; i++)
     {
       mFilter.mPreviousIntegralOutputQ.emplace_back();
+      mFilter.mPreviousIntegralOutputdQ.emplace_back();
       for (unsigned int j = 0; j < mFilter.mFilterOrder; j++)
       {
         mFilter.mPreviousIntegralOutputQ[i].push_back(0.0f);
@@ -232,6 +232,39 @@ public:
     {
       mFilter.mAlphaQ.push_back(params.alphaQ[i]);
       mFilter.mAlphadQ.push_back(params.alphadQ[i]);
+    }
+  }
+
+  Filter filter()
+  {
+    return mFilter;
+  }
+
+  Control control()
+  {
+    return mControl;
+  }
+
+  void execute(Robot& robot)
+  {
+    // Execute the filter algorithms //
+    if (mFilter.filterType.compare("lowPassFilter") == 0)
+    {
+      mFilter.executeLowPassFilter(robot);
+    }
+    
+    // Execute the control algorithms //
+    if (mControl.controlType.compare("adaptiveControl") == 0)
+    {
+      mControl.executeAdaptiveControl(robot);
+    }
+    else if (mControl.controlType.compare("robustControl") == 0)
+    {
+      mControl.executeRobustControl(robot);
+    }
+    else if (mControl.controlType.compare("pdControl") == 0)
+    {
+      mControl.executePDControl(robot);
     }
   }
 

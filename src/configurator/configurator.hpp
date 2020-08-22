@@ -69,7 +69,7 @@ namespace configurator
 inline bool stringToBool(std::string text)
 {
   bool result = false;
-  if (text.compare("true") || text.compare("1"))
+  if (text.compare("true") == 0 || text.compare("1") == 0)
   {
     result = true;
   }
@@ -77,7 +77,7 @@ inline bool stringToBool(std::string text)
   return result;
 }
 
-inline int xmlToInt(tinyxml2::XMLElement* xmlElement, const char* elementString)
+inline int xmlToInt(tinyxml2::XMLElement*& xmlElement, const char* elementString)
 {
   std::string elementText = xmlElement->GetText();
   int value = std::stoi(elementText);
@@ -86,7 +86,7 @@ inline int xmlToInt(tinyxml2::XMLElement* xmlElement, const char* elementString)
   return value;
 }
 
-inline float xmlToFloat(tinyxml2::XMLElement* xmlElement, const char* elementString)
+inline float xmlToFloat(tinyxml2::XMLElement*& xmlElement, const char* elementString)
 {
   std::string elementText = xmlElement->GetText();
   float value = std::stof(elementText);
@@ -95,7 +95,7 @@ inline float xmlToFloat(tinyxml2::XMLElement* xmlElement, const char* elementStr
   return value;
 }
 
-inline ParamsR configureRobot(tinyxml2::XMLElement* robotConfig, unsigned int& robotLinks)
+inline ParamsR configureRobot(tinyxml2::XMLElement*& robotConfig, unsigned int& robotLinks)
 {
   ParamsR paramsRobot;
 
@@ -122,9 +122,9 @@ inline ParamsR configureRobot(tinyxml2::XMLElement* robotConfig, unsigned int& r
   return paramsRobot;
 }
 
-inline void configureLowPassFilter(tinyxml2::XMLElement* filterConfig, ParamsF& paramsFilter)
+inline void configureLowPassFilter(tinyxml2::XMLElement*& filterConfig, ParamsF& paramsFilter)
 {
-  std::string filterOrderString = filterConfig->GetText();
+  std::string filterOrderString = filterConfig->FirstChildElement("filterOrder")->GetText();
   unsigned int filterOrder = std::stoi(filterOrderString);
   paramsFilter.filterOrder = filterOrder;
   
@@ -139,7 +139,7 @@ inline void configureLowPassFilter(tinyxml2::XMLElement* filterConfig, ParamsF& 
   }
 }
 
-inline ParamsF configureFilter(tinyxml2::XMLElement* filterConfig, unsigned int& robotLinks)
+inline ParamsF configureFilter(tinyxml2::XMLElement*& filterConfig, unsigned int& robotLinks)
 {
   ParamsF paramsFilter;
 
@@ -148,7 +148,7 @@ inline ParamsF configureFilter(tinyxml2::XMLElement* filterConfig, unsigned int&
   std::string filterType = filterConfig->FirstChildElement("filterType")->GetText();
   paramsFilter.filterType = filterType;
 
-  if (filterType.compare("lowPassFilter") > 0)
+  if (filterType.compare("lowPassFilter") == 0)
   {
     configureLowPassFilter(filterConfig, paramsFilter);
   }
@@ -156,7 +156,7 @@ inline ParamsF configureFilter(tinyxml2::XMLElement* filterConfig, unsigned int&
   return paramsFilter;
 }
 
-inline void configureAdaptiveControl(tinyxml2::XMLElement* controlConfig, ParamsC& paramsControl)
+inline void configureAdaptiveControl(tinyxml2::XMLElement*& controlConfig, ParamsC& paramsControl)
 {
   tinyxml2::XMLElement* samplingRateElement = controlConfig->FirstChildElement("samplingRate");
   std::string deltString = samplingRateElement->FirstChildElement("delt")->GetText();
@@ -172,7 +172,7 @@ inline void configureAdaptiveControl(tinyxml2::XMLElement* controlConfig, Params
   {
     paramsControl.k.push_back(xmlToFloat(kElement, "k"));
     paramsControl.lambda.push_back(xmlToFloat(lambdaElement, "lambda"));
-    n = n+i+1;
+    n = n+i+2;
   }
 
   tinyxml2::XMLElement* rateOfAdaptivityElement = controlConfig->FirstChildElement("rateOfAdaptivity");
@@ -184,7 +184,7 @@ inline void configureAdaptiveControl(tinyxml2::XMLElement* controlConfig, Params
   }
 }
 
-inline void configureRobustControl(tinyxml2::XMLElement* controlConfig, ParamsC& paramsControl)
+inline void configureRobustControl(tinyxml2::XMLElement*& controlConfig, ParamsC& paramsControl)
 {
   tinyxml2::XMLElement* linearGainsElement = controlConfig->FirstChildElement("linearGains");
   tinyxml2::XMLElement* kElement = linearGainsElement->FirstChildElement("k");
@@ -206,7 +206,7 @@ inline void configureRobustControl(tinyxml2::XMLElement* controlConfig, ParamsC&
   paramsControl.epsilon = xmlToFloat(epsilonElement, "epsilon");
 }
 
-inline void configurePDControl(tinyxml2::XMLElement* controlConfig, ParamsC& paramsControl)
+inline void configurePDControl(tinyxml2::XMLElement*& controlConfig, ParamsC& paramsControl)
 {
   tinyxml2::XMLElement* linearGainsElement = controlConfig->FirstChildElement("linearGains");
   tinyxml2::XMLElement* kpElement = linearGainsElement->FirstChildElement("kp");
@@ -220,7 +220,7 @@ inline void configurePDControl(tinyxml2::XMLElement* controlConfig, ParamsC& par
   }
 }
 
-inline ParamsC configureControl(tinyxml2::XMLElement* controlConfig, unsigned int& robotLinks)
+inline ParamsC configureControl(tinyxml2::XMLElement*& controlConfig, unsigned int& robotLinks)
 {
   ParamsC paramsControl;
 
@@ -229,15 +229,15 @@ inline ParamsC configureControl(tinyxml2::XMLElement* controlConfig, unsigned in
   std::string controlType = controlConfig->FirstChildElement("controlType")->GetText();
   paramsControl.controlType = controlType;
 
-  if (controlType.compare("adpativeControl") > 0)
+  if (controlType.compare("adaptiveControl") == 0)
   {
     configureAdaptiveControl(controlConfig, paramsControl);
   }
-  else if (controlType.compare("robustControl") > 0)
+  else if (controlType.compare("robustControl") == 0)
   {
     configureRobustControl(controlConfig, paramsControl);
   }
-  else if (controlType.compare("pdControl") > 0)
+  else if (controlType.compare("pdControl") == 0)
   {
     configurePDControl(controlConfig, paramsControl);
   }
@@ -250,6 +250,8 @@ inline std::tuple<ParamsR, ParamsF, ParamsC> initializeParams(const char* config
   // Load and Parse the Config File //
   tinyxml2::XMLDocument config;
   tinyxml2::XMLError error = config.LoadFile(configFile);
+
+  // if (error == tinyxml2::XMLError::XML_SUCCESS) // Need to add this some how 
 
   // Get the Root Element of the Config File //
   tinyxml2::XMLElement* controllerConfig = config.FirstChildElement("Controller");
