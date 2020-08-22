@@ -1,23 +1,24 @@
-#include "filter/lowPassFilter.hpp"
+#include "filter/filter.hpp"
 
 namespace robot
 {
 // Execute Low Pass Filter //
 template <typename Robot>
-void lowPassFilter<Robot>::execute(Robot& robot)
+void Filter<Robot>::executeLowPassFilter(Robot& robot)
 {
   // Nested for loop between the number of robot links and filter order //
   for (unsigned int i = 0; i < robot->numberLinks; i++)
   {
     for (unsigned int j = 0; j < mFilterOrder; j++)
     {
-      robot->thetaF(i) = filter(robot->theta(i), mPreviousIntegralOutputQ[i][j], mAlphaQ[j]);
-      robot->dthetaF(i) = filter(robot->dtheta(i), mPreviousIntegralOutputdQ[i][j], mAlphadQ[j]);
+      robot->thetaF(i) = lowPassFilter(robot->theta(i), mPreviousIntegralOutputQ[i][j], mAlphaQ[j]);
+      robot->dthetaF(i) = lowPassFilter(robot->dtheta(i), mPreviousIntegralOutputdQ[i][j], mAlphadQ[j]);
     }
   }
 }
 
-float filter(float& y, float& yInt, float& alpha)
+template <typename Robot>
+float Filter<Robot>::lowPassFilter(float& y, float& yInt, float& alpha)
 {
   float yOut1;
 

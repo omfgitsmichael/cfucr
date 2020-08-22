@@ -1,5 +1,5 @@
-#ifndef LOW_PASS_FILTER_HPP_
-#define LOW_PASS_FILTER_HPP_
+#ifndef FILTER_HPP_
+#define FILTER_HPP_
 
 #include <string>
 #include <vector>
@@ -10,22 +10,25 @@ namespace robot
 {
   
 template <typename Robot>
-class lowPassFilter
+class Filter
 {
 public:
-  lowPassFilter()
+  Filter()
   {
   }
 
-  ~lowPassFilter()
+  ~Filter()
   {
   }
 
   // Low Pass Filter //
-  void execute(Robot& robot);
-  float filter(float& y, float& yInt, float& alpha);
+  void executeLowPassFilter(Robot& robot);
+  float lowPassFilter(float& y, float& yInt, float& alpha);
  
-  // Public Member Variables //
+  // Public member variables //
+  std::string filterType;
+
+  // Low pass filter variables //
   std::vector<float> mAlphaQ;
   std::vector<float> mAlphadQ;
   std::vector<std::vector<float>> mPreviousIntegralOutputQ;
@@ -35,4 +38,4 @@ public:
 
 } // namespace robot
 
-#endif // LOW_PASS_FILTER_HPP_
+#endif // FILTER_HPP_

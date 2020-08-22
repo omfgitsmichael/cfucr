@@ -1,5 +1,5 @@
 # Add filter files #
 add_library(filter-libs
-  lowPassFilter.cpp
-  lowPassFilter.hpp
+  filter.cpp
+  filter.hpp
 )

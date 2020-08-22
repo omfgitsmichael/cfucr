@@ -2,6 +2,7 @@
 #define CONTROL_UTILITIES_HPP_
 
 #include <cmath>
+#include <string>
 
 #include "mathUtilities/matrixUtilities.hpp"
 #include "types/oneLinkRobot.hpp"
