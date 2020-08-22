@@ -26,8 +26,8 @@ public:
     std::tie(paramsRobot, paramsFilter, paramsControl) = configurator::initializeParams(configFile);
 
     initializeRobot(robot, paramsRobot);
-    initializeControl(paramsControl);
     initializeFilter(paramsFilter);
+    initializeControl(paramsControl);
   }
 
   ~Controller()
@@ -139,15 +139,16 @@ public:
 
   void initializeControl(ParamsC& params)
   {
-    if (params.controlType.compare("adpativeControl") > 0)
+    mControl.controlType = params.controlType;
+    if (mControl.controlType.compare("adpativeControl") > 0)
     {
       initializeAdaptiveControl(params);
     }
-    else if (params.controlType.compare("robustControl") > 0)
+    else if (mControl.controlType.compare("robustControl") > 0)
     {
       initializeRobustControl(params);
     }
-    else if (params.controlType.compare("pdControl") > 0)
+    else if (mControl.controlType.compare("pdControl") > 0)
     {
       initializePDControl(params);
     }
@@ -204,7 +205,9 @@ public:
 
   void initializeFilter(ParamsF& params)
   {
-    if (params.filterType.compare("lowPassFilter") > 0)
+    mFilter.filterType = params.filterType;
+
+    if (mFilter.filterType.compare("lowPassFilter") > 0)
     {
       initializeLowPassFilter(params);
     }

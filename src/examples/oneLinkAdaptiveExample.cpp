@@ -5,7 +5,7 @@
 
 int main()
 {
-  const char* configFile = "../../configurations/sampleOneLinkAdaptiveConfig.xml";
+  const char* configFile = "../../../configurations/sampleOneLinkAdaptiveConfig.xml";
   robot::sharedOneLinkRobot robot = std::make_shared<robot::OneLinkRobot>();
 
   robot::Controller<robot::sharedOneLinkRobot, robot::oneLinkAdaptiveControl, robot::lowPassFilter<robot::sharedOneLinkRobot>> controller(configFile, robot);

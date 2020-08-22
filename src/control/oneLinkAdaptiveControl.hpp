@@ -23,6 +23,8 @@ public:
   void execute(sharedOneLinkRobot& robot);
 
   // Public member variables //
+  std::string controlType;
+
   ScalarF mK;
   ScalarF mLambda;
   Matrix2x2F mGamma;
