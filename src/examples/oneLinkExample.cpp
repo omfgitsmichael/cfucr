@@ -5,12 +5,24 @@
 #include "filter/filter.hpp"
 #include "types/oneLinkRobot.hpp"
 
-int main()
-{
-  const char* configFile = "../../../configurations/sampleOneLinkAdaptiveConfig.xml";
+int main(int argc, char* argv[])
+{ 
+  std::cout << argc << std::endl;
+  char * configFile1;
+  if (argc == 2)
+  {
+    configFile1 = argv[1];
+  }
+  else
+  {
+    std::cout << "Incorrect number of arguments!" << std::endl;
+
+    return 0;
+  }
+
   robot::sharedOneLinkRobot robot = std::make_shared<robot::OneLinkRobot>();
 
-  robot::Controller<robot::sharedOneLinkRobot, robot::OneLinkControl, robot::Filter<robot::sharedOneLinkRobot>> controller(configFile, robot);
+  robot::Controller<robot::sharedOneLinkRobot, robot::OneLinkControl, robot::Filter<robot::sharedOneLinkRobot>> controller(configFile1, robot);
 
   robot::OneLinkControl control = controller.control();
   robot::Filter<robot::sharedOneLinkRobot> filter = controller.filter();
@@ -22,10 +34,19 @@ int main()
   std::cout << robot->motorGearRatio << std::endl;
   
   std::cout << "\nController Stuff:" << std::endl;
+  std::cout << "Adaptive Stuff:" << std::endl;
   std::cout << control.mK << std::endl;
   std::cout << control.mLambda << std::endl;
   std::cout << control.mGamma << std::endl;
   std::cout << control.mDelt << std::endl;
+  std::cout << "Robust Stuff:" << std::endl;
+  std::cout << control.mK << std::endl;
+  std::cout << control.mLambda << std::endl;
+  std::cout << control.mRho << std::endl;
+  std::cout << control.mEpsilon << std::endl;
+  std::cout << "PD Stuff:" << std::endl;
+  std::cout << control.mKp << std::endl;
+  std::cout << control.mKd << std::endl;
 
   std::cout << "\nFilter Stuff:" << std::endl;
   std::cout << filter.mFilterOrder << std::endl;
