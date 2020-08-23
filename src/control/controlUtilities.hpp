@@ -70,7 +70,7 @@ inline Matrix2x5F twoLinkRegressor(sharedTwoLinkRobot& robot, Vector2x1F& v, Vec
 
   regressor(1,0) = 0.0f;
   regressor(1,1) = a(0)+a(1);
-  regressor(1,2) = std::cos(q(1))*a(0); + std::sin(q(1))*qdot(0)*v(0);
+  regressor(1,2) = std::cos(q(1))*a(0) + std::sin(q(1))*qdot(0)*v(0);
   regressor(1,3) = 0.0f;
   regressor(1,4) = std::cos(q(0)+q(1));
 
