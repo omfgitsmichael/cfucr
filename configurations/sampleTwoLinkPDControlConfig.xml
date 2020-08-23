@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<Controller>
+
+  <numberLinks>2</numberLinks>
+
+  <robot>
+    <mass>2.0</mass>
+    <mass>2.0</mass>
+    <lengthLink>0.3</lengthLink>
+    <lengthLink>0.3</lengthLink>
+    <lengthToMass>0.27</lengthToMass>
+    <lengthToMass>0.27</lengthToMass>
+    <motorInertia>0.0004</motorInertia>
+    <motorInertia>0.0004</motorInertia>
+    <gearRatio>1.0</gearRatio>
+    <gearRatio>1.0</gearRatio>
+
+    <enableGravityTerms>true</enableGravityTerms>
+  </robot>
+
+  <filter>
+    <filterType>lowPassFilter</filterType>
+    <filterOrder>3</filterOrder>
+    <alphaQ>0.88</alphaQ>
+    <alphaQ>0.75</alphaQ>
+    <alphaQ>0.75</alphaQ>
+    <alphadQ>0.92</alphadQ>
+    <alphadQ>0.90</alphadQ>
+    <alphadQ>0.88</alphadQ>
+  </filter>
+
+  <control>
+    <controlType>pdControl</controlType>
+    <linearGains>
+      <kp>-14.0622</kp>
+      <kp>-14.0622</kp>
+      <kd>-5.30325</kd>
+      <kd>-5.30325</kd>
+    </linearGains>
+  </control>
+
+</Controller>
