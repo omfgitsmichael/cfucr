@@ -46,11 +46,11 @@ inline Vector calculateR(Robot& robot, Matrix& lambda)
 // One link regressor matrix //
 inline Matrix1x2F oneLinkRegressor(sharedOneLinkRobot& robot, ScalarF& v, ScalarF& a)
 {
-  ScalarF thetaF = robot->thetaF;
+  ScalarF q = robot->thetaF;
 
   Matrix1x2F regressor;
   regressor(0,0) = a(0);
-  regressor(0,1) = std::cos(thetaF(0));
+  regressor(0,1) = std::cos(q(0));
 
   return regressor;
 }
@@ -58,11 +58,21 @@ inline Matrix1x2F oneLinkRegressor(sharedOneLinkRobot& robot, ScalarF& v, Scalar
 // Two link regressor matrix //
 inline Matrix2x5F twoLinkRegressor(sharedTwoLinkRobot& robot, Vector2x1F& v, Vector2x1F& a)
 {
-  Vector2x1F thetaF = robot->thetaF;
+  Vector2x1F q = robot->thetaF;
+  Vector2x1F qdot = robot->dthetaF;
 
   Matrix2x5F regressor;
   regressor(0,0) = a(0);
-  regressor(0,1) = std::cos(thetaF(0));
+  regressor(0,1) = a(0) + a(1);
+  regressor(0,2) = std::cos(q(1))*(2*a(0)+a(1)) - std::sin(q(1))*(qdot(1)*v(0)+qdot(0)*v(1)+qdot(1)*v(1));
+  regressor(0,3) = std::cos(q(0));
+  regressor(0,4) = std::cos(q(0)+q(1));
+
+  regressor(1,0) = 0.0f;
+  regressor(1,1) = a(0)+a(1);
+  regressor(1,2) = std::cos(q(1))*a(0); + std::sin(q(1))*qdot(0)*v(0);
+  regressor(1,3) = 0.0f;
+  regressor(1,4) = std::cos(q(0)+q(1));
 
   return regressor;
 }
@@ -70,11 +80,39 @@ inline Matrix2x5F twoLinkRegressor(sharedTwoLinkRobot& robot, Vector2x1F& v, Vec
 // Three link regressor matrix //
 inline Matrix3x9F threeLinkRegressor(sharedThreeLinkRobot& robot, Vector3x1F& v, Vector3x1F& a)
 {
-  Vector3x1F thetaF = robot->thetaF;
+  Vector3x1F q = robot->thetaF;
+  Vector3x1F qdot = robot->dthetaF;
 
   Matrix3x9F regressor;
   regressor(0,0) = a(0);
-  regressor(0,1) = std::cos(thetaF(0));
+  regressor(0,1) = a(0) + a(1);
+  regressor(0,2) = a(0) + a(1) + a(2);
+  regressor(0,3) = std::cos(q(1))*(2*a(0)+a(1)) - std::sin(q(1))*(qdot(1)*v(0)+(qdot(0)+qdot(1))*v(1));
+  regressor(0,4) = std::cos(q(1)+q(2))*(2*a(0)+a(1)+a(2)) - std::sin(q(1)+q(2))*((qdot(1)+qdot(2))*v(0)+(qdot(0)+qdot(1)+qdot(2))*v(1)+(qdot(0)+qdot(1)+qdot(2))*v(2));
+  regressor(0,5) = std::cos(q(2))*(2*a(0)+2*a(1)+a(2)) - std::sin(q(2))*(qdot(2)*v(0)+qdot(2)*v(1)+(qdot(0)+qdot(1)+qdot(2))*v(2));
+  regressor(0,6) = std::cos(q(0));
+  regressor(0,7) = std::cos(q(0)+q(1));
+  regressor(0,8) = std::cos(q(0)+q(1)+q(2));
+
+  regressor(1,0) = 0.0f;
+  regressor(1,1) = a(0) + a(1);
+  regressor(1,2) = a(0) + a(1) + a(2);
+  regressor(1,3) = std::cos(q(1))*a(0) + std::sin(q(1))*qdot(0)*v(0);
+  regressor(1,4) = std::cos(q(1)+q(2))*a(0) + std::sin(q(1)+q(2))*qdot(0)*v(0);
+  regressor(1,5) = std::cos(q(2))*(2*a(0)+2*a(1)+a(2)) - std::sin(q(2))*(qdot(2)*v(0)+qdot(2)*v(1)+(qdot(0)+qdot(1)+qdot(2))*v(2));
+  regressor(1,6) = 0.0f;
+  regressor(1,7) = std::cos(q(0)+q(1));
+  regressor(1,8) = std::cos(q(0)+q(1)+q(2));
+
+  regressor(2,0) = 0.0f;
+  regressor(2,1) = 0.0f;
+  regressor(2,2) = a(0) + a(1) + a(2);
+  regressor(2,3) = 0.0f;
+  regressor(2,4) = std::cos(q(1)+q(2))*a(0) + std::sin(q(1)+q(2))*qdot(0)*v(0);
+  regressor(2,5) = std::cos(q(2))*(a(0)+a(1)) + std::sin(q(2))*(qdot(0)+qdot(1))*(v(0)+v(1));
+  regressor(2,6) = 0.0f;
+  regressor(2,7) = 0.0f;
+  regressor(2,8) = std::cos(q(0)+q(1)+q(2));
 
   return regressor;
 }
