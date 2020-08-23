@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 #include "controller.hpp"
 #include "control/oneLinkControl.hpp"
@@ -65,8 +66,14 @@ int main(int argc, char* argv[])
   robot->theta_d(0) = 0.01f;
   robot->dtheta_d(0) = 0.01f;
   robot->ddtheta_d(0) = 0.01f;
-
+  
+  auto t1 = std::chrono::high_resolution_clock::now();
   controller.execute(robot);
+  auto t2 = std::chrono::high_resolution_clock::now();
+
+  std::chrono::duration<float> timeDuration = t2 - t1;
+
+  std::cout << "It took " << timeDuration.count() << " seconds to run execute!" << std::endl;
 
   std::cout << "\nControl output:" << std::endl;
   std::cout << robot->u << std::endl;
