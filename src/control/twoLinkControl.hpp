@@ -1,73 +1,73 @@
-#ifndef ONE_LINK_CONTROL_HPP_
-#define ONE_LINK_CONTROL_HPP_
+#ifndef TWO_LINK_CONTROL_HPP_
+#define TWO_LINK_CONTROL_HPP_
 
 #include "control/controlUtilities.hpp"
 
 namespace robot
 {
 
-class OneLinkControl
+class TwoLinkControl
 {
 public:
   
-  OneLinkControl()
+  TwoLinkControl()
   {
   }
 
-  ~OneLinkControl()
+  ~TwoLinkControl()
   {
   }
 
-  void executeAdaptiveControl(sharedOneLinkRobot& robot)
+  void executeAdaptiveControl(sharedTwoLinkRobot& robot)
   {
     // Calculate and save the error //
     robot->e = robot->thetaF - robot->theta_d;
     robot->de = robot->dthetaF - robot->dtheta_d;
 
     // Calculate passivity terms //
-    ScalarF v = calculateV<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
-    ScalarF a = calculateA<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
-    ScalarF r = calculateR<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+    Vector2x1F v = calculateV<sharedTwoLinkRobot, Vector2x1F, Matrix2x2F>(robot, mLambda);
+    Vector2x1F a = calculateA<sharedTwoLinkRobot, Vector2x1F, Matrix2x2F>(robot, mLambda);
+    Vector2x1F r = calculateR<sharedTwoLinkRobot, Vector2x1F, Matrix2x2F>(robot, mLambda);
 
     // Calculate regressor matrix //
-    Matrix1x2F Y = oneLinkRegressor(robot, v, a);
+    Matrix2x5F Y = twoLinkRegressor(robot, v, a);
 
     // Update the estimated parameters //
-    Vector2x1F F = -mGamma.inverse()*Y.transpose()*r;
-    Vector2x1F p = robot->parameters + F*mDelt;
+    Vector5x1F F = -mGamma.inverse()*Y.transpose()*r;
+    Vector5x1F p = robot->parameters + F*mDelt;
     robot->parameters = p;
 
     // Calculate the motor control torque for each link //
     robot->u = robot->motorGearRatio.inverse()*(Y*p - mK*r);
   }
 
-  // One link robust control //
-  void executeRobustControl(sharedOneLinkRobot& robot)
+  // Three link robust control //
+  void executeRobustControl(sharedTwoLinkRobot& robot)
   {
     // Calculate and save the error //
     robot->e = robot->thetaF - robot->theta_d;
     robot->de = robot->dthetaF - robot->dtheta_d;
 
     // Calculate passivity terms //
-    ScalarF v = calculateV<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
-    ScalarF a = calculateA<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
-    ScalarF r = calculateR<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+    Vector2x1F v = calculateV<sharedTwoLinkRobot, Vector2x1F, Matrix2x2F>(robot, mLambda);
+    Vector2x1F a = calculateA<sharedTwoLinkRobot, Vector2x1F, Matrix2x2F>(robot, mLambda);
+    Vector2x1F r = calculateR<sharedTwoLinkRobot, Vector2x1F, Matrix2x2F>(robot, mLambda);
 
     // Calculate regressor matrix //
-    Matrix1x2F Y = oneLinkRegressor(robot, v, a);
+    Matrix2x5F Y = twoLinkRegressor(robot, v, a);
 
     // Update the estimated parameters //
-    Vector2x1F F = Y.transpose()*r;
-    float normF = std::sqrt(F(0)*F(0) + F(1)*F(1));
+    Vector5x1F F = Y.transpose()*r;
+    float normF = std::sqrt(F(0)*F(0) + F(1)*F(1) + F(2)*F(2) + F(3)*F(3) + F(4)*F(4));
 
-    Vector2x1F delp = normF > mEpsilon ? (-mRho/normF)*F : (-mRho/mEpsilon)*F;
+    Vector5x1F delp = normF > mEpsilon ? (-mRho/normF)*F : (-mRho/mEpsilon)*F;
 
     // Calculate the motor control torque for each link //
     robot->u = robot->motorGearRatio.inverse()*(Y*(robot->parameters + delp) - mK*r);
   }
 
-  // One link robust control //
-  void executePDControl(sharedOneLinkRobot& robot)
+  // Two link robust control //
+  void executePDControl(sharedTwoLinkRobot& robot)
   {
     // Calculate and save the error //
     robot->e = robot->thetaF - robot->theta_d;
@@ -81,11 +81,11 @@ public:
   std::string controlType;
   
   // Adaptive and robust control specific //
-  ScalarF mK;
-  ScalarF mLambda;
+  Matrix2x2F mK;
+  Matrix2x2F mLambda;
 
   // Adaptive control specific //
-  Matrix2x2F mGamma;
+  Matrix5x5F mGamma;
   float mDelt;
 
   // Robust control specific //
@@ -93,9 +93,9 @@ public:
   float mEpsilon;
 
   // PD control specific //
-  ScalarF mKp;
-  ScalarF mKd;
+  Matrix2x2F mKp;
+  Matrix2x2F mKd;
 };
 
 } // namespace robot
-#endif // ONE_LINK_CONTROL_HPP_
+#endif // TWO_LINK_CONTROL_HPP_

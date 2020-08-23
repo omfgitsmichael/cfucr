@@ -6,6 +6,8 @@
 
 #include "mathUtilities/matrixUtilities.hpp"
 #include "types/oneLinkRobot.hpp"
+#include "types/twoLinkRobot.hpp"
+#include "types/threeLinkRobot.hpp"
 
 namespace robot
 {
@@ -47,6 +49,30 @@ inline Matrix1x2F oneLinkRegressor(sharedOneLinkRobot& robot, ScalarF& v, Scalar
   ScalarF thetaF = robot->thetaF;
 
   Matrix1x2F regressor;
+  regressor(0,0) = a(0);
+  regressor(0,1) = std::cos(thetaF(0));
+
+  return regressor;
+}
+
+// Two link regressor matrix //
+inline Matrix2x5F twoLinkRegressor(sharedTwoLinkRobot& robot, Vector2x1F& v, Vector2x1F& a)
+{
+  Vector2x1F thetaF = robot->thetaF;
+
+  Matrix2x5F regressor;
+  regressor(0,0) = a(0);
+  regressor(0,1) = std::cos(thetaF(0));
+
+  return regressor;
+}
+
+// Three link regressor matrix //
+inline Matrix3x9F threeLinkRegressor(sharedThreeLinkRobot& robot, Vector3x1F& v, Vector3x1F& a)
+{
+  Vector3x1F thetaF = robot->thetaF;
+
+  Matrix3x9F regressor;
   regressor(0,0) = a(0);
   regressor(0,1) = std::cos(thetaF(0));
 
