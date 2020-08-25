@@ -12,6 +12,7 @@ using Matrix1x2F = Eigen::Matrix<float,1,2>;
 using Matrix3x3F = Eigen::Matrix<float,3,3>;
 using Matrix5x5F = Eigen::Matrix<float,5,5>;
 using Vector3x1F = Eigen::Matrix<float,3,1>;
+using Vector4x1F = Eigen::Matrix<float,4,1>;
 using Vector5x1F = Eigen::Matrix<float,5,1>;
 using Matrix2x5F = Eigen::Matrix<float,2,5>;
 using Matrix2x3F = Eigen::Matrix<float,2,3>;

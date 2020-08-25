@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<Controller>
+
+  <numberLinks>3</numberLinks>
+
+  <robot>
+    <mass>2.0</mass>
+    <mass>2.0</mass>
+    <mass>2.0</mass>
+    <lengthLink>0.3</lengthLink>
+    <lengthLink>0.3</lengthLink>
+    <lengthLink>0.3</lengthLink>
+    <lengthToMass>0.27</lengthToMass>
+    <lengthToMass>0.27</lengthToMass>
+    <lengthToMass>0.27</lengthToMass>
+    <motorInertia>0.0004</motorInertia>
+    <motorInertia>0.0004</motorInertia>
+    <motorInertia>0.0004</motorInertia>
+    <gearRatio>1.0</gearRatio>
+    <gearRatio>1.0</gearRatio>
+    <gearRatio>1.0</gearRatio>
+
+    <enableGravityTerms>true</enableGravityTerms>
+  </robot>
+
+  <filter>
+    <filterType>lowPassFilter</filterType>
+    <filterOrder>3</filterOrder>
+    <alphaQ>0.88</alphaQ>
+    <alphaQ>0.75</alphaQ>
+    <alphaQ>0.75</alphaQ>
+    <alphadQ>0.92</alphadQ>
+    <alphadQ>0.90</alphadQ>
+    <alphadQ>0.88</alphadQ>
+  </filter>
+
+  <control>
+    <controlType>robustAdaptiveControl</controlType>
+    <linearGains>
+      <k>5.30325</k>
+      <k>5.30325</k>
+      <k>5.30325</k>
+      <lambda>2.651625</lambda>
+      <lambda>2.651625</lambda>
+      <lambda>2.651625</lambda>
+    </linearGains>
+    <rateOfAdaptivity>
+      <gamma>2</gamma>
+      <gamma>2</gamma>
+      <gamma>2</gamma>
+      <gamma>2</gamma>
+      <gamma>2</gamma>
+      <gamma>2</gamma>
+      <gamma>0.01</gamma>
+      <gamma>0.01</gamma>
+      <gamma>0.01</gamma>
+    </rateOfAdaptivity>
+    <samplingRate>
+      <delt>0.01</delt>
+    </samplingRate>
+    <parameterNoise>
+      <rho>1.0</rho>
+      <del>0.3</del>
+    </parameterNoise>
+  </control>
+
+</Controller>

@@ -147,6 +147,10 @@ public:
     {
       initializeRobustControl(params);
     }
+    else if (mControl.controlType.compare("robustAdaptiveControl") == 0)
+    {
+      initializeRobustAdaptiveControl(params);
+    }
     else if (mControl.controlType.compare("pdControl") == 0)
     {
       initializePDControl(params);
@@ -186,6 +190,30 @@ public:
       {
         mControl.mK(i,j) = (i == j) ? params.k[i] : 0.0f;
         mControl.mLambda(i,j) = (i == j) ? params.lambda[i] : 0.0f;
+      }
+    }
+  }
+
+  void initializeRobustAdaptiveControl(ParamsC& params)
+  {
+    mControl.mDelt = params.delt;
+    mControl.mRho = params.rho;
+    mControl.mDel = params.del;
+
+    for (unsigned int i = 0; i < params.numberLinks; i++)
+    {
+      for (unsigned int j = 0; j < params.numberLinks; j++)
+      {
+        mControl.mK(i,j) = (i == j) ? params.k[i] : 0.0f;
+        mControl.mLambda(i,j) = (i == j) ? params.lambda[i] : 0.0f;
+      }
+    }
+
+    for (unsigned int i = 0; i < params.gamma.size(); i++)
+    {
+      for (unsigned int j = 0; j < params.gamma.size(); j++)
+      {
+        mControl.mGamma(i,j) = (i == j) ? params.gamma[i] : 0.0f;
       }
     }
   }
@@ -261,6 +289,10 @@ public:
     else if (mControl.controlType.compare("robustControl") == 0)
     {
       mControl.executeRobustControl(robot);
+    }
+    else if (mControl.controlType.compare("robustAdaptiveControl") == 0)
+    {
+      mControl.executeRobustAdaptiveControl(robot);
     }
     else if (mControl.controlType.compare("pdControl") == 0)
     {

@@ -1,6 +1,8 @@
 #ifndef CONFIGURATOR_HPP_
 #define CONFIGURATOR_HPP_
 
+#include <exception>
+#include <iostream>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -39,6 +41,7 @@ struct ParamsC
   // Robust Control //
   float rho = 0.0f;
   float epsilon = 0.0f;
+  float del = 0.0f;
   
   // Adaptive Control //
   float delt = 0.0f;
@@ -177,6 +180,7 @@ inline void configureAdaptiveControl(tinyxml2::XMLElement*& controlConfig, Param
 
   tinyxml2::XMLElement* rateOfAdaptivityElement = controlConfig->FirstChildElement("rateOfAdaptivity");
   tinyxml2::XMLElement* gammaElement = rateOfAdaptivityElement->FirstChildElement("gamma");
+
   // Place Rate of Adaptivity Inside the Params //
   for (int i = 0; i < n; i++)
   {
@@ -204,6 +208,45 @@ inline void configureRobustControl(tinyxml2::XMLElement*& controlConfig, ParamsC
   // Grab the parameter noise terms //
   paramsControl.rho = xmlToFloat(rhoElement, "rho");
   paramsControl.epsilon = xmlToFloat(epsilonElement, "epsilon");
+}
+
+inline void configureRobustAdaptiveControl(tinyxml2::XMLElement*& controlConfig, ParamsC& paramsControl)
+{
+  // Configure adaptive terms //
+  tinyxml2::XMLElement* samplingRateElement = controlConfig->FirstChildElement("samplingRate");
+  std::string deltString = samplingRateElement->FirstChildElement("delt")->GetText();
+  paramsControl.delt = std::stof(deltString);
+
+  tinyxml2::XMLElement* linearGainsElement = controlConfig->FirstChildElement("linearGains");
+  tinyxml2::XMLElement* kElement = linearGainsElement->FirstChildElement("k");
+  tinyxml2::XMLElement* lambdaElement = linearGainsElement->FirstChildElement("lambda");
+  
+  unsigned int n = 0;
+  // Place the Linear Gains Inside of the Params //
+  for (int i = 0; i < paramsControl.numberLinks; i++)
+  {
+    paramsControl.k.push_back(xmlToFloat(kElement, "k"));
+    paramsControl.lambda.push_back(xmlToFloat(lambdaElement, "lambda"));
+    n = n+i+2;
+  }
+
+  tinyxml2::XMLElement* rateOfAdaptivityElement = controlConfig->FirstChildElement("rateOfAdaptivity");
+  tinyxml2::XMLElement* gammaElement = rateOfAdaptivityElement->FirstChildElement("gamma");
+
+  // Place Rate of Adaptivity Inside the Params //
+  for (int i = 0; i < n; i++)
+  {
+    paramsControl.gamma.push_back(xmlToFloat(gammaElement, "gamma"));
+  }
+  
+  // Configure Robust terms //
+  tinyxml2::XMLElement* parameterNoiseElement = controlConfig->FirstChildElement("parameterNoise");
+  tinyxml2::XMLElement* rhoElement = parameterNoiseElement->FirstChildElement("rho");
+  tinyxml2::XMLElement* delElement = parameterNoiseElement->FirstChildElement("del");
+  
+  // Grab the parameter noise terms //
+  paramsControl.rho = xmlToFloat(rhoElement, "rho");
+  paramsControl.del = xmlToFloat(delElement, "del");
 }
 
 inline void configurePDControl(tinyxml2::XMLElement*& controlConfig, ParamsC& paramsControl)
@@ -237,6 +280,10 @@ inline ParamsC configureControl(tinyxml2::XMLElement*& controlConfig, unsigned i
   {
     configureRobustControl(controlConfig, paramsControl);
   }
+  else if (controlType.compare("robustAdaptiveControl") == 0)
+  {
+    configureRobustAdaptiveControl(controlConfig, paramsControl);
+  }
   else if (controlType.compare("pdControl") == 0)
   {
     configurePDControl(controlConfig, paramsControl);
@@ -251,7 +298,11 @@ inline std::tuple<ParamsR, ParamsF, ParamsC> initializeParams(const char* config
   tinyxml2::XMLDocument config;
   tinyxml2::XMLError error = config.LoadFile(configFile);
 
-  // if (error == tinyxml2::XMLError::XML_SUCCESS) // Need to add this some how 
+  if (error != tinyxml2::XMLError::XML_SUCCESS)
+  {
+    std::cout << "XML failed to parse!" << std::endl;
+    throw std::exception();
+  }
 
   // Get the Root Element of the Config File //
   tinyxml2::XMLElement* controllerConfig = config.FirstChildElement("Controller");

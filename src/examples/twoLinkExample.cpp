@@ -45,6 +45,12 @@ int main(int argc, char* argv[])
   std::cout << control.mLambda << std::endl;
   std::cout << control.mRho << std::endl;
   std::cout << control.mEpsilon << std::endl;
+  std::cout << "Robust Adaptive Stuff:" << std::endl;
+  std::cout << control.mK << std::endl;
+  std::cout << control.mLambda << std::endl;
+  std::cout << control.mGamma << std::endl;
+  std::cout << control.mRho << std::endl;
+  std::cout << control.mDel << std::endl;
   std::cout << "PD Stuff:" << std::endl;
   std::cout << control.mKp << std::endl;
   std::cout << control.mKd << std::endl;
