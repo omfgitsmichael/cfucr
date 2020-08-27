@@ -69,6 +69,24 @@ struct ParamsF
 namespace configurator
 {
 
+inline void babyLogger(tinyxml2::XMLElement*& xmlElement, std::string string)
+{
+  if (xmlElement == nullptr)
+  {
+    std::cout << string << std::endl;
+    throw std::exception();
+  }
+}
+
+inline void babyLogger(tinyxml2::XMLError& xmlError, std::string string)
+{
+  if (xmlError != tinyxml2::XMLError::XML_SUCCESS)
+  {
+    std::cout << string << std::endl;
+    throw std::exception();
+  }
+}
+
 inline bool stringToBool(std::string text)
 {
   bool result = false;
@@ -80,20 +98,28 @@ inline bool stringToBool(std::string text)
   return result;
 }
 
-inline int xmlToInt(tinyxml2::XMLElement*& xmlElement, const char* elementString)
+inline int xmlToInt(tinyxml2::XMLElement*& xmlElement, const char* elementChar)
 {
+  std::string elementString = elementChar;
+  std::string stringWord = "configurator::xmlToInt - Not enough " + elementString + " elements!";
+  babyLogger(xmlElement, stringWord);
+
   std::string elementText = xmlElement->GetText();
   int value = std::stoi(elementText);
-  xmlElement = xmlElement->NextSiblingElement(elementString);
+  xmlElement = xmlElement->NextSiblingElement(elementChar);
 
   return value;
 }
 
-inline float xmlToFloat(tinyxml2::XMLElement*& xmlElement, const char* elementString)
+inline float xmlToFloat(tinyxml2::XMLElement*& xmlElement, const char* elementChar)
 {
+  std::string elementString = elementChar;
+  std::string stringWord = "configurator::xmlToFloat - Not enough " + elementString + " elements!";
+  babyLogger(xmlElement, stringWord);
+
   std::string elementText = xmlElement->GetText();
   float value = std::stof(elementText);
-  xmlElement = xmlElement->NextSiblingElement(elementString);
+  xmlElement = xmlElement->NextSiblingElement(elementChar);
 
   return value;
 }
@@ -103,8 +129,11 @@ inline ParamsR configureRobot(tinyxml2::XMLElement*& robotConfig, unsigned int& 
   ParamsR paramsRobot;
 
   paramsRobot.numberLinks = robotLinks;
+  
+  tinyxml2::XMLElement* gravityElement = robotConfig->FirstChildElement("enableGravityTerms");
+  babyLogger(gravityElement, "configurator::configureRobot - Failed to find gravity element!");
 
-  std::string enableGravityTermsString = robotConfig->FirstChildElement("enableGravityTerms")->GetText();
+  std::string enableGravityTermsString = gravityElement->GetText();
   paramsRobot.enableGravityTerms = stringToBool(enableGravityTermsString);
 
   tinyxml2::XMLElement* massElement = robotConfig->FirstChildElement("mass");
@@ -127,7 +156,10 @@ inline ParamsR configureRobot(tinyxml2::XMLElement*& robotConfig, unsigned int& 
 
 inline void configureLowPassFilter(tinyxml2::XMLElement*& filterConfig, ParamsF& paramsFilter)
 {
-  std::string filterOrderString = filterConfig->FirstChildElement("filterOrder")->GetText();
+  tinyxml2::XMLElement* filterOrderElement = filterConfig->FirstChildElement("filterOrder");
+  babyLogger(filterOrderElement, "configurator::configureLowPassFilter - Failed to find filter order element!");
+
+  std::string filterOrderString = filterOrderElement->GetText();
   unsigned int filterOrder = std::stoi(filterOrderString);
   paramsFilter.filterOrder = filterOrder;
   
@@ -148,7 +180,10 @@ inline ParamsF configureFilter(tinyxml2::XMLElement*& filterConfig, unsigned int
 
   paramsFilter.numberLinks = robotLinks;
 
-  std::string filterType = filterConfig->FirstChildElement("filterType")->GetText();
+  tinyxml2::XMLElement* filterTypeElement = filterConfig->FirstChildElement("filterType");
+  babyLogger(filterTypeElement, "configurator::configureFilter - Failed to find filter type element!");
+
+  std::string filterType = filterTypeElement->GetText();
   paramsFilter.filterType = filterType;
 
   if (filterType.compare("lowPassFilter") == 0)
@@ -162,10 +197,17 @@ inline ParamsF configureFilter(tinyxml2::XMLElement*& filterConfig, unsigned int
 inline void configureAdaptiveControl(tinyxml2::XMLElement*& controlConfig, ParamsC& paramsControl)
 {
   tinyxml2::XMLElement* samplingRateElement = controlConfig->FirstChildElement("samplingRate");
-  std::string deltString = samplingRateElement->FirstChildElement("delt")->GetText();
+  babyLogger(samplingRateElement, "configurator::configureAdaptiveControl - Failed to find sampling rate element!");
+  
+  tinyxml2::XMLElement* deltElement =samplingRateElement->FirstChildElement("delt");
+  babyLogger(deltElement, "configurator::configureAdaptiveControl - Failed to find delt element!");
+
+  std::string deltString = deltElement->GetText();
   paramsControl.delt = std::stof(deltString);
 
   tinyxml2::XMLElement* linearGainsElement = controlConfig->FirstChildElement("linearGains");
+  babyLogger(linearGainsElement, "configurator::configureAdaptiveControl - Failed to find linear gains element!");
+
   tinyxml2::XMLElement* kElement = linearGainsElement->FirstChildElement("k");
   tinyxml2::XMLElement* lambdaElement = linearGainsElement->FirstChildElement("lambda");
   
@@ -179,6 +221,8 @@ inline void configureAdaptiveControl(tinyxml2::XMLElement*& controlConfig, Param
   }
 
   tinyxml2::XMLElement* rateOfAdaptivityElement = controlConfig->FirstChildElement("rateOfAdaptivity");
+  babyLogger(rateOfAdaptivityElement, "configurator::configureAdaptiveControl - Failed to find rate of adaptivity element!");
+
   tinyxml2::XMLElement* gammaElement = rateOfAdaptivityElement->FirstChildElement("gamma");
 
   // Place Rate of Adaptivity Inside the Params //
@@ -191,6 +235,8 @@ inline void configureAdaptiveControl(tinyxml2::XMLElement*& controlConfig, Param
 inline void configureRobustControl(tinyxml2::XMLElement*& controlConfig, ParamsC& paramsControl)
 {
   tinyxml2::XMLElement* linearGainsElement = controlConfig->FirstChildElement("linearGains");
+  babyLogger(linearGainsElement, "configurator::configureRobustControl - Failed to find linear gains element!");
+
   tinyxml2::XMLElement* kElement = linearGainsElement->FirstChildElement("k");
   tinyxml2::XMLElement* lambdaElement = linearGainsElement->FirstChildElement("lambda");
   
@@ -202,6 +248,8 @@ inline void configureRobustControl(tinyxml2::XMLElement*& controlConfig, ParamsC
   }
 
   tinyxml2::XMLElement* parameterNoiseElement = controlConfig->FirstChildElement("parameterNoise");
+  babyLogger(parameterNoiseElement, "configurator::configureRobustControl - Failed to find parameter noise element!");
+
   tinyxml2::XMLElement* rhoElement = parameterNoiseElement->FirstChildElement("rho");
   tinyxml2::XMLElement* epsilonElement = parameterNoiseElement->FirstChildElement("epsilon");
   
@@ -214,10 +262,17 @@ inline void configureRobustAdaptiveControl(tinyxml2::XMLElement*& controlConfig,
 {
   // Configure adaptive terms //
   tinyxml2::XMLElement* samplingRateElement = controlConfig->FirstChildElement("samplingRate");
-  std::string deltString = samplingRateElement->FirstChildElement("delt")->GetText();
+  babyLogger(samplingRateElement, "configurator::configureRobustAdaptiveControl - Failed to find sampling rate element!");
+  
+  tinyxml2::XMLElement* deltElement = samplingRateElement->FirstChildElement("delt");
+  babyLogger(deltElement, "configurator::configureRobustAdaptiveControl - Failed to find delt element!");
+
+  std::string deltString = deltElement->GetText();
   paramsControl.delt = std::stof(deltString);
 
   tinyxml2::XMLElement* linearGainsElement = controlConfig->FirstChildElement("linearGains");
+  babyLogger(linearGainsElement, "configurator::configureRobustAdaptiveControl - Failed to find linear gains element!");
+
   tinyxml2::XMLElement* kElement = linearGainsElement->FirstChildElement("k");
   tinyxml2::XMLElement* lambdaElement = linearGainsElement->FirstChildElement("lambda");
   
@@ -231,6 +286,8 @@ inline void configureRobustAdaptiveControl(tinyxml2::XMLElement*& controlConfig,
   }
 
   tinyxml2::XMLElement* rateOfAdaptivityElement = controlConfig->FirstChildElement("rateOfAdaptivity");
+  babyLogger(rateOfAdaptivityElement, "configurator::configureRobustAdaptiveControl - Failed to find rate of adaptivity element!");
+
   tinyxml2::XMLElement* gammaElement = rateOfAdaptivityElement->FirstChildElement("gamma");
 
   // Place Rate of Adaptivity Inside the Params //
@@ -241,6 +298,8 @@ inline void configureRobustAdaptiveControl(tinyxml2::XMLElement*& controlConfig,
   
   // Configure Robust terms //
   tinyxml2::XMLElement* parameterNoiseElement = controlConfig->FirstChildElement("parameterNoise");
+  babyLogger(parameterNoiseElement, "configurator::configureRobustAdaptiveControl - Failed to find parameter noise element!");
+
   tinyxml2::XMLElement* rhoElement = parameterNoiseElement->FirstChildElement("rho");
   tinyxml2::XMLElement* delElement = parameterNoiseElement->FirstChildElement("del");
   
@@ -252,6 +311,8 @@ inline void configureRobustAdaptiveControl(tinyxml2::XMLElement*& controlConfig,
 inline void configurePDControl(tinyxml2::XMLElement*& controlConfig, ParamsC& paramsControl)
 {
   tinyxml2::XMLElement* linearGainsElement = controlConfig->FirstChildElement("linearGains");
+  babyLogger(linearGainsElement, "configurator::configurePDControl - Failed to find linear gains element!");
+
   tinyxml2::XMLElement* kpElement = linearGainsElement->FirstChildElement("kp");
   tinyxml2::XMLElement* kdElement = linearGainsElement->FirstChildElement("kd");
   
@@ -268,8 +329,11 @@ inline ParamsC configureControl(tinyxml2::XMLElement*& controlConfig, unsigned i
   ParamsC paramsControl;
 
   paramsControl.numberLinks = robotLinks;
+  
+  tinyxml2::XMLElement* controlTypeElement = controlConfig->FirstChildElement("controlType");
+  babyLogger(controlTypeElement, "configurator::configureControl - Failed to find control type element!");
 
-  std::string controlType = controlConfig->FirstChildElement("controlType")->GetText();
+  std::string controlType =controlTypeElement->GetText();
   paramsControl.controlType = controlType;
 
   if (controlType.compare("adaptiveControl") == 0)
@@ -297,22 +361,25 @@ inline std::tuple<ParamsR, ParamsF, ParamsC> initializeParams(const char* config
   // Load and Parse the Config File //
   tinyxml2::XMLDocument config;
   tinyxml2::XMLError error = config.LoadFile(configFile);
-
-  if (error != tinyxml2::XMLError::XML_SUCCESS)
-  {
-    std::cout << "XML failed to parse!" << std::endl;
-    throw std::exception();
-  }
+  babyLogger(error, "configurator::initializeParams - XML failed to parse!");
 
   // Get the Root Element of the Config File //
   tinyxml2::XMLElement* controllerConfig = config.FirstChildElement("Controller");
+  
+  tinyxml2::XMLElement* robotLinksElement = controllerConfig->FirstChildElement("numberLinks");
+  babyLogger(robotLinksElement, "configurator::initializeParams - Failed to find robot links element!");
 
-  std::string robotLinksString = controllerConfig->FirstChildElement("numberLinks")->GetText();
+  std::string robotLinksString = robotLinksElement->GetText();
   unsigned int robotLinks = std::stoi(robotLinksString);
 
   tinyxml2::XMLElement* robotConfig = controllerConfig->FirstChildElement("robot");
+  babyLogger(robotConfig, "configurator::initializeParams - Failed to find robot element!");
+
   tinyxml2::XMLElement* controlConfig = controllerConfig->FirstChildElement("control");
+  babyLogger(controlConfig, "configurator::initializeParams - Failed to find control element!");
+
   tinyxml2::XMLElement* filterConfig = controllerConfig->FirstChildElement("filter");
+  babyLogger(filterConfig, "configurator::initializeParams - Failed to find filter element!");
 
   ParamsR paramsRobot = configureRobot(robotConfig, robotLinks);
   ParamsF paramsFilter = configureFilter(filterConfig, robotLinks);
