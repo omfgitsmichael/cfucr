@@ -31,25 +31,25 @@ int main(int argc, char* argv[])
   robot::Filter<robot::sharedThreeLinkRobot> filter = controller.filter();
 
   // To run the controller all the user needs to do is populate the robot with measured and desired states and then execute the controller //
-  robot->theta(0) = 0.00175f; // measured
-  robot->theta(1) = 0.00175f; // measured
-  robot->theta(2) = 0.00175f; // measured
+  robot->theta(0) = 0.3021f; // measured rad
+  robot->theta(1) = -0.7063f; // measured rad
+  robot->theta(2) = 0.7140f; // measured rad
 
-  robot->dtheta(0) = 0.000175f; // measured
-  robot->dtheta(1) = 0.000175f; // measured
-  robot->dtheta(2) = 0.000175f; // measured
+  robot->dtheta(0) = -0.3404f; // measured rad/sec
+  robot->dtheta(1) = 0.8760f; // measured rad/sec
+  robot->dtheta(2) = -1.0325f; // measured rad/sec
 
-  robot->theta_d(0) = 0.01f;
-  robot->dtheta_d(0) = 0.01f;
-  robot->ddtheta_d(0) = 0.01f;
+  robot->theta_d(0) = 0.3438f; // desired rad
+  robot->dtheta_d(0) = -0.6876f; // desired rad/sec
+  robot->ddtheta_d(0) = 0.6876f; // desired rad/sec^2
 
-  robot->theta_d(1) = 0.01f;
-  robot->dtheta_d(1) = 0.01f;
-  robot->ddtheta_d(1) = 0.01f;
+  robot->theta_d(1) = -0.4718f; // desired rad
+  robot->dtheta_d(1) = 0.9436f; // desired rad/sec
+  robot->ddtheta_d(1) = -0.9436f; // desired rad/sec^2
 
-  robot->theta_d(2) = 0.01f;
-  robot->dtheta_d(2) = 0.01f;
-  robot->ddtheta_d(2) = 0.01f;
+  robot->theta_d(2) = -1.8057f; // desired rad
+  robot->dtheta_d(2) = 3.6115f; // desired rad/sec
+  robot->ddtheta_d(2) = -3.6115f; // desired rad/sec^2
   
   auto t1 = std::chrono::high_resolution_clock::now();
   controller.execute(robot);
