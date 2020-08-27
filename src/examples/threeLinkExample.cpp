@@ -8,7 +8,6 @@
 
 int main(int argc, char* argv[])
 { 
-  std::cout << argc << std::endl;
   char * configFile1;
   if (argc == 2)
   {
@@ -20,68 +19,33 @@ int main(int argc, char* argv[])
 
     return 0;
   }
-
+  
+  // Initialize the robot //
   robot::sharedThreeLinkRobot robot = std::make_shared<robot::ThreeLinkRobot>();
-
+  
+  // Initialize the controller with the desired classes, the config file, and the robot //
   robot::Controller<robot::sharedThreeLinkRobot, robot::ThreeLinkControl, robot::Filter<robot::sharedThreeLinkRobot>> controller(configFile1, robot);
-
+  
+  // If the user desires they can grab the current state controller and filter //
   robot::ThreeLinkControl control = controller.control();
   robot::Filter<robot::sharedThreeLinkRobot> filter = controller.filter();
-  
-  // Print out all of the initialize information to confirm it has initialized properly //
-  std::cout << "Robot Stuff:" << std::endl;
-  std::cout << robot->numberLinks << std::endl;
-  std::cout << robot->parameters << std::endl;
-  std::cout << robot->motorGearRatio << std::endl;
-  
-  std::cout << "\nController Stuff:" << std::endl;
-  std::cout << "Adaptive Stuff:" << std::endl;
-  std::cout << control.mK << std::endl;
-  std::cout << control.mLambda << std::endl;
-  std::cout << control.mGamma << std::endl;
-  std::cout << control.mDelt << std::endl;
-  std::cout << "Robust Stuff:" << std::endl;
-  std::cout << control.mK << std::endl;
-  std::cout << control.mLambda << std::endl;
-  std::cout << control.mRho << std::endl;
-  std::cout << control.mEpsilon << std::endl;
-  std::cout << "Robust Adaptive Stuff:" << std::endl;
-  std::cout << control.mK << std::endl;
-  std::cout << control.mLambda << std::endl;
-  std::cout << control.mGamma << std::endl;
-  std::cout << control.mRho << std::endl;
-  std::cout << control.mDel << std::endl;
-  std::cout << "PD Stuff:" << std::endl;
-  std::cout << control.mKp << std::endl;
-  std::cout << control.mKd << std::endl;
 
-  std::cout << "\nFilter Stuff:" << std::endl;
-  std::cout << filter.mFilterOrder << std::endl;
-  for (unsigned int i = 0; i < robot->numberLinks; i++)
-  {
-    for (unsigned int j = 0; j < filter.mFilterOrder; j++)
-    {
-      std::cout << filter.mPreviousIntegralOutputQ[i][j] << " " << filter.mAlphaQ[j] << "\t" << filter.mPreviousIntegralOutputdQ[i][j] << " " << filter.mAlphadQ[j] << std::endl;
-    }
-  }
+  // To run the controller all the user needs to do is populate the robot with measured and desired states and then execute the controller //
+  robot->theta(0) = 0.00175f; // measured
+  robot->theta(1) = 0.00175f; // measured
+  robot->theta(2) = 0.00175f; // measured
 
-  // Lets test to see if the execute function is working or if it needs to be modified //
-  robot->theta(0) = 0.00175f; // measured 0.1 deg
-  robot->dtheta(0) = 0.000175f; // measured 0.01 deg/sec
+  robot->dtheta(0) = 0.000175f; // measured
+  robot->dtheta(1) = 0.000175f; // measured
+  robot->dtheta(2) = 0.000175f; // measured
 
   robot->theta_d(0) = 0.01f;
   robot->dtheta_d(0) = 0.01f;
   robot->ddtheta_d(0) = 0.01f;
-  
-  robot->theta(1) = 0.00175f; // measured 0.1 deg
-  robot->dtheta(1) = 0.000175f; // measured 0.01 deg/sec
 
   robot->theta_d(1) = 0.01f;
   robot->dtheta_d(1) = 0.01f;
   robot->ddtheta_d(1) = 0.01f;
-
-  robot->theta(2) = 0.00175f; // measured 0.1 deg
-  robot->dtheta(2) = 0.000175f; // measured 0.01 deg/sec
 
   robot->theta_d(2) = 0.01f;
   robot->dtheta_d(2) = 0.01f;
@@ -92,7 +56,6 @@ int main(int argc, char* argv[])
   auto t2 = std::chrono::high_resolution_clock::now();
 
   std::chrono::duration<float> timeDuration = t2 - t1;
-
   std::cout << "It took " << timeDuration.count() << " seconds to run execute!" << std::endl;
 
   std::cout << "\nControl output:" << std::endl;
