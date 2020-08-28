@@ -2,7 +2,6 @@
 #define ONE_LINK_ROBOT_HPP_
 
 #include <memory>
-#include <vector>
 
 #include "mathUtilities/matrixUtilities.hpp"
 
