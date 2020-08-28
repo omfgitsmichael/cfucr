@@ -37,45 +37,45 @@ public:
 
   void initializeRobot(Robot& robot, ParamsR& params)
   {
-    robot->numberLinks = params.numberLinks;
+    robot.numberLinks = params.numberLinks;
 
     std::vector<float> I;
 
-    for (unsigned int i = 0; i < robot->numberLinks; i++)
+    for (unsigned int i = 0; i < robot.numberLinks; i++)
     {
-      robot->theta(i) = 0.0f;
-      robot->dtheta(i) = 0.0f;
+      robot.theta(i) = 0.0f;
+      robot.dtheta(i) = 0.0f;
 
-      robot->thetaF(i) = 0.0f;
-      robot->dthetaF(i) = 0.0f;
+      robot.thetaF(i) = 0.0f;
+      robot.dthetaF(i) = 0.0f;
 
-      robot->e(i) = 0.0f;
-      robot->de(i) = 0.0f;
+      robot.e(i) = 0.0f;
+      robot.de(i) = 0.0f;
 
-      robot->theta_d(i) = 0.0f;
-      robot->dtheta_d(i) = 0.0f;
-      robot->ddtheta_d(i) = 0.0f;
+      robot.theta_d(i) = 0.0f;
+      robot.dtheta_d(i) = 0.0f;
+      robot.ddtheta_d(i) = 0.0f;
 
-      robot->u(i) = 0.0f;
+      robot.u(i) = 0.0f;
       
-      for (unsigned int j = 0; j < robot->numberLinks; j++)
+      for (unsigned int j = 0; j < robot.numberLinks; j++)
       {
-        robot->motorGearRatio(i,j) = (i == j) ? params.gearRatio[i] : 0.0f;
+        robot.motorGearRatio(i,j) = (i == j) ? params.gearRatio[i] : 0.0f;
       }
       
       // Total inertia for link i = r^2*Jm + (1/3)*m*l^2 //
       I.push_back(params.gearRatio[i]*params.gearRatio[i]*params.motorInertia[i] + (1.0f/3.0f)*params.m[i]*params.l[i]*params.l[i]);
     }
 
-    if (robot->numberLinks == 1)
+    if (robot.numberLinks == 1)
     {
       initializeOneLink(robot, params, I);
     }
-    else if (robot->numberLinks == 2)
+    else if (robot.numberLinks == 2)
     {
       initializeTwoLink(robot, params, I);
     }
-    else if (robot->numberLinks == 3)
+    else if (robot.numberLinks == 3)
     {
       initializeThreeLink(robot, params, I);
     }
@@ -83,56 +83,56 @@ public:
 
   void initializeOneLink(Robot& robot, ParamsR& params, std::vector<float> I)
   {  
-    robot->parameters(0) = params.m[0]*params.lc[0]*params.lc[0] + I[0];
+    robot.parameters(0) = params.m[0]*params.lc[0]*params.lc[0] + I[0];
 
     if (params.enableGravityTerms)
     {
-      robot->parameters(1) = params.m[0]*params.lc[0]*GRAVITY;
+      robot.parameters(1) = params.m[0]*params.lc[0]*GRAVITY;
     }
     else
     {
-      robot->parameters(1) = 0.0f;
+      robot.parameters(1) = 0.0f;
     }
   }
 
   void initializeTwoLink(Robot& robot, ParamsR& params, std::vector<float> I)
   {
-    robot->parameters(0) = params.m[0]*params.lc[0]*params.lc[0] + params.m[1]*params.l[0]*params.l[0] + I[0];
-    robot->parameters(1) = params.m[1]*params.lc[1]*params.lc[1] + I[1];
-    robot->parameters(2) = params.m[1]*params.l[0]*params.lc[1];
+    robot.parameters(0) = params.m[0]*params.lc[0]*params.lc[0] + params.m[1]*params.l[0]*params.l[0] + I[0];
+    robot.parameters(1) = params.m[1]*params.lc[1]*params.lc[1] + I[1];
+    robot.parameters(2) = params.m[1]*params.l[0]*params.lc[1];
 
     if (params.enableGravityTerms)
     {
-      robot->parameters(3) = (params.m[0]*params.lc[0] + params.m[1]*params.l[0])*GRAVITY;
-      robot->parameters(4) = params.m[1]*params.lc[1]*GRAVITY;
+      robot.parameters(3) = (params.m[0]*params.lc[0] + params.m[1]*params.l[0])*GRAVITY;
+      robot.parameters(4) = params.m[1]*params.lc[1]*GRAVITY;
     }
     else
     {
-      robot->parameters(3) = 0.0f;
-      robot->parameters(4) = 0.0f;
+      robot.parameters(3) = 0.0f;
+      robot.parameters(4) = 0.0f;
     }
   }
 
   void initializeThreeLink(Robot& robot, ParamsR& params, std::vector<float> I)
   {
-    robot->parameters(0) = params.m[0]*params.lc[0]*params.lc[0] + params.m[1]*params.l[0]*params.l[0] + params.m[2]*params.l[0]*params.l[0] + I[0];
-    robot->parameters(1) = params.m[1]*params.lc[1]*params.lc[1] + params.m[2]*params.l[1]*params.l[1] + I[1];
-    robot->parameters(2) = params.m[2]*params.lc[2]*params.lc[2] + I[2];
-    robot->parameters(3) = params.m[1]*params.l[0]*params.lc[1] + params.m[2]*params.l[0]*params.l[1];
-    robot->parameters(4) = params.m[2]*params.l[0]*params.lc[2];
-    robot->parameters(5) = params.m[2]*params.l[1]*params.lc[2];
+    robot.parameters(0) = params.m[0]*params.lc[0]*params.lc[0] + params.m[1]*params.l[0]*params.l[0] + params.m[2]*params.l[0]*params.l[0] + I[0];
+    robot.parameters(1) = params.m[1]*params.lc[1]*params.lc[1] + params.m[2]*params.l[1]*params.l[1] + I[1];
+    robot.parameters(2) = params.m[2]*params.lc[2]*params.lc[2] + I[2];
+    robot.parameters(3) = params.m[1]*params.l[0]*params.lc[1] + params.m[2]*params.l[0]*params.l[1];
+    robot.parameters(4) = params.m[2]*params.l[0]*params.lc[2];
+    robot.parameters(5) = params.m[2]*params.l[1]*params.lc[2];
 
     if (params.enableGravityTerms)
     {
-      robot->parameters(6) = (params.m[0]*params.lc[0] + params.m[1]*params.l[0] + params.m[2]*params.l[0])*GRAVITY;
-      robot->parameters(7) = (params.m[1]*params.lc[1] + params.m[2]*params.l[1])*GRAVITY;
-      robot->parameters(8) = params.m[2]*params.lc[2]*GRAVITY;
+      robot.parameters(6) = (params.m[0]*params.lc[0] + params.m[1]*params.l[0] + params.m[2]*params.l[0])*GRAVITY;
+      robot.parameters(7) = (params.m[1]*params.lc[1] + params.m[2]*params.l[1])*GRAVITY;
+      robot.parameters(8) = params.m[2]*params.lc[2]*GRAVITY;
     }
     else
     {
-      robot->parameters(6) = 0.0f;
-      robot->parameters(7) = 0.0f;
-      robot->parameters(8) = 0.0f;
+      robot.parameters(6) = 0.0f;
+      robot.parameters(7) = 0.0f;
+      robot.parameters(8) = 0.0f;
     }
   }
 

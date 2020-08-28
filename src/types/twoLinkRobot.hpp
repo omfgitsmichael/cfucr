@@ -1,8 +1,6 @@
 #ifndef TWO_LINK_ROBOT_HPP_
 #define TWO_LINK_ROBOT_HPP_
 
-#include <memory>
-
 #include "mathUtilities/matrixUtilities.hpp"
 
 namespace robot
@@ -44,9 +42,6 @@ public:
   unsigned int numberLinks;
   Matrix2x2F motorGearRatio; // Diagonal Matrix of the Gear Ratios //
 };
-
-// Shared Pointer to the Robot //
-using sharedTwoLinkRobot = std::shared_ptr<TwoLinkRobot>;
 
 } // namespace robot
 

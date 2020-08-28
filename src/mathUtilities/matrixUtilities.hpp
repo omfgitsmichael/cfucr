@@ -6,7 +6,7 @@ namespace robot
 {
 // Matrices and Vectors Used by the Robotic Manipulator //
 using ScalarF = Eigen::Matrix<float,1,1>;
-using Matrix2x2F = Eigen::Matrix<float,2,2,Eigen::DontAlign>; // Why is this the only one that needs to change?
+using Matrix2x2F = Eigen::Matrix<float,2,2>;
 using Vector2x1F = Eigen::Matrix<float,2,1>;
 using Matrix1x2F = Eigen::Matrix<float,1,2>;
 using Matrix3x3F = Eigen::Matrix<float,3,3>;

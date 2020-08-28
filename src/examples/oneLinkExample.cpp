@@ -21,22 +21,22 @@ int main(int argc, char* argv[])
   }
   
   // Initialize the robot //
-  robot::sharedOneLinkRobot robot = std::make_shared<robot::OneLinkRobot>();
+  robot::OneLinkRobot robot;
   
   // Initialize the controller with the desired classes, the config file, and the robot //
-  robot::Controller<robot::sharedOneLinkRobot, robot::OneLinkControl, robot::Filter<robot::sharedOneLinkRobot>> controller(configFile1, robot);
+  robot::Controller<robot::OneLinkRobot, robot::OneLinkControl, robot::Filter<robot::OneLinkRobot>> controller(configFile1, robot);
   
   // If the user desires they can grab the current state controller and filter //
   robot::OneLinkControl control = controller.control();
-  robot::Filter<robot::sharedOneLinkRobot> filter = controller.filter();
+  robot::Filter<robot::OneLinkRobot> filter = controller.filter();
   
   // To run the controller all the user needs to do is populate the robot with measured and desired states and then execute the controller //
-  robot->theta(0) = 0.1223f; // measured rad
-  robot->dtheta(0) = -0.3431f; // measured rad/sec
+  robot.theta(0) = 0.1223f; // measured rad
+  robot.dtheta(0) = -0.3431f; // measured rad/sec
 
-  robot->theta_d(0) = 0.12f; // desired rad
-  robot->dtheta_d(0) = -0.2901f; // desired rad/sec
-  robot->ddtheta_d(0) = 5.6113f; // desired rad/sec^2
+  robot.theta_d(0) = 0.12f; // desired rad
+  robot.dtheta_d(0) = -0.2901f; // desired rad/sec
+  robot.ddtheta_d(0) = 5.6113f; // desired rad/sec^2
   
   auto t1 = std::chrono::high_resolution_clock::now();
   controller.execute(robot);
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
   std::cout << "It took " << timeDuration.count() << " seconds to run execute!" << std::endl;
 
   std::cout << "\nControl output:" << std::endl;
-  std::cout << robot->u << std::endl;
+  std::cout << robot.u << std::endl;
 
   return 0;
 }

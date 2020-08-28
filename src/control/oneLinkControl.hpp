@@ -18,40 +18,40 @@ public:
   {
   }
 
-  void executeAdaptiveControl(sharedOneLinkRobot& robot)
+  void executeAdaptiveControl(OneLinkRobot& robot)
   {
     // Calculate and save the error //
-    robot->e = robot->thetaF - robot->theta_d;
-    robot->de = robot->dthetaF - robot->dtheta_d;
+    robot.e = robot.thetaF - robot.theta_d;
+    robot.de = robot.dthetaF - robot.dtheta_d;
 
     // Calculate passivity terms //
-    ScalarF v = calculateV<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
-    ScalarF a = calculateA<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
-    ScalarF r = calculateR<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+    ScalarF v = calculateV<OneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+    ScalarF a = calculateA<OneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+    ScalarF r = calculateR<OneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
 
     // Calculate regressor matrix //
     Matrix1x2F Y = oneLinkRegressor(robot, v, a);
 
     // Update the estimated parameters //
     Vector2x1F F = -mGamma.inverse()*Y.transpose()*r;
-    Vector2x1F p = robot->parameters + F*mDelt;
-    robot->parameters = p;
+    Vector2x1F p = robot.parameters + F*mDelt;
+    robot.parameters = p;
 
     // Calculate the motor control torque for each link //
-    robot->u = robot->motorGearRatio.inverse()*(Y*p - mK*r);
+    robot.u = robot.motorGearRatio.inverse()*(Y*p - mK*r);
   }
 
   // One link robust control //
-  void executeRobustControl(sharedOneLinkRobot& robot)
+  void executeRobustControl(OneLinkRobot& robot)
   {
     // Calculate and save the error //
-    robot->e = robot->thetaF - robot->theta_d;
-    robot->de = robot->dthetaF - robot->dtheta_d;
+    robot.e = robot.thetaF - robot.theta_d;
+    robot.de = robot.dthetaF - robot.dtheta_d;
 
     // Calculate passivity terms //
-    ScalarF v = calculateV<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
-    ScalarF a = calculateA<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
-    ScalarF r = calculateR<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+    ScalarF v = calculateV<OneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+    ScalarF a = calculateA<OneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+    ScalarF r = calculateR<OneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
 
     // Calculate regressor matrix //
     Matrix1x2F Y = oneLinkRegressor(robot, v, a);
@@ -63,50 +63,50 @@ public:
     Vector2x1F delp = normF > mEpsilon ? (-mRho/normF)*F : (-mRho/mEpsilon)*F;
 
     // Calculate the motor control torque for each link //
-    robot->u = robot->motorGearRatio.inverse()*(Y*(robot->parameters + delp) - mK*r);
+    robot.u = robot.motorGearRatio.inverse()*(Y*(robot.parameters + delp) - mK*r);
   }
 
   // One link robust adaptive control //
-  void executeRobustAdaptiveControl(sharedOneLinkRobot& robot)
+  void executeRobustAdaptiveControl(OneLinkRobot& robot)
   {
     // Calculate and save the error //
-    robot->e = robot->thetaF - robot->theta_d;
-    robot->de = robot->dthetaF - robot->dtheta_d;
+    robot.e = robot.thetaF - robot.theta_d;
+    robot.de = robot.dthetaF - robot.dtheta_d;
 
     // Calculate passivity terms //
-    ScalarF v = calculateV<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
-    ScalarF a = calculateA<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
-    ScalarF r = calculateR<sharedOneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+    ScalarF v = calculateV<OneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+    ScalarF a = calculateA<OneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
+    ScalarF r = calculateR<OneLinkRobot, ScalarF, ScalarF>(robot, mLambda);
 
     // Calculate regressor matrix //
     Matrix1x2F Y = oneLinkRegressor(robot, v, a);
 
     // Claculate the robust term //
     Vector2x1F e;
-    e(0) = robot->e(0);
-    e(1) = robot->de(0);
+    e(0) = robot.e(0);
+    e(1) = robot.de(0);
 
     float f = (e.norm()-mDel*mRho)/((1-mDel)*mRho);
     float mu = std::max(0.0f,std::min(1.0f,f));
     
     // Update the estimated parameters //
     Vector2x1F F = -mu*mGamma.inverse()*Y.transpose()*r;
-    Vector2x1F p = robot->parameters + F*mDelt;
-    robot->parameters = p;
+    Vector2x1F p = robot.parameters + F*mDelt;
+    robot.parameters = p;
 
     // Calculate the motor control torque for each link //
-    robot->u = robot->motorGearRatio.inverse()*(Y*p - mK*r);
+    robot.u = robot.motorGearRatio.inverse()*(Y*p - mK*r);
   }
 
   // One link robust control //
-  void executePDControl(sharedOneLinkRobot& robot)
+  void executePDControl(OneLinkRobot& robot)
   {
     // Calculate and save the error //
-    robot->e = robot->thetaF - robot->theta_d;
-    robot->de = robot->dthetaF - robot->dtheta_d;
+    robot.e = robot.thetaF - robot.theta_d;
+    robot.de = robot.dthetaF - robot.dtheta_d;
 
     // Calculate the motor control torque for each link //
-    robot->u = robot->motorGearRatio.inverse()*(mKp*robot->e + mKd*robot->de);
+    robot.u = robot.motorGearRatio.inverse()*(mKp*robot.e + mKd*robot.de);
   }
 
   // Public member variables //

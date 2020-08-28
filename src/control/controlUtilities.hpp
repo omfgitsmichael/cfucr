@@ -15,8 +15,8 @@ namespace robot
 template <typename Robot, typename Vector, typename Matrix>
 inline Vector calculateV(Robot& robot, Matrix& lambda)
 {
-  Vector e = robot->e;
-  Vector dtheta_d = robot->dtheta_d;
+  Vector e = robot.e;
+  Vector dtheta_d = robot.dtheta_d;
   Vector v = dtheta_d - lambda*e;
 
   return v;
@@ -26,8 +26,8 @@ template <typename Robot, typename Vector, typename Matrix>
 inline Vector calculateA(Robot& robot, Matrix& lambda)
 {
 
-  Vector de = robot->de;
-  Vector ddtheta_d = robot->ddtheta_d;
+  Vector de = robot.de;
+  Vector ddtheta_d = robot.ddtheta_d;
   Vector a = ddtheta_d - lambda*de;
 
   return a;
@@ -36,17 +36,17 @@ inline Vector calculateA(Robot& robot, Matrix& lambda)
 template <typename Robot, typename Vector, typename Matrix>
 inline Vector calculateR(Robot& robot, Matrix& lambda)
 {
-  Vector e = robot->e;
-  Vector de = robot->de;
+  Vector e = robot.e;
+  Vector de = robot.de;
   Vector r = de + lambda*e;
 
   return r;
 }
 
 // One link regressor matrix //
-inline Matrix1x2F oneLinkRegressor(sharedOneLinkRobot& robot, ScalarF& v, ScalarF& a)
+inline Matrix1x2F oneLinkRegressor(OneLinkRobot& robot, ScalarF& v, ScalarF& a)
 {
-  ScalarF q = robot->thetaF;
+  ScalarF q = robot.thetaF;
 
   Matrix1x2F regressor;
   regressor(0,0) = a(0);
@@ -56,10 +56,10 @@ inline Matrix1x2F oneLinkRegressor(sharedOneLinkRobot& robot, ScalarF& v, Scalar
 }
 
 // Two link regressor matrix //
-inline Matrix2x5F twoLinkRegressor(sharedTwoLinkRobot& robot, Vector2x1F& v, Vector2x1F& a)
+inline Matrix2x5F twoLinkRegressor(TwoLinkRobot& robot, Vector2x1F& v, Vector2x1F& a)
 {
-  Vector2x1F q = robot->thetaF;
-  Vector2x1F qdot = robot->dthetaF;
+  Vector2x1F q = robot.thetaF;
+  Vector2x1F qdot = robot.dthetaF;
 
   Matrix2x5F regressor;
   regressor(0,0) = a(0);
@@ -78,10 +78,10 @@ inline Matrix2x5F twoLinkRegressor(sharedTwoLinkRobot& robot, Vector2x1F& v, Vec
 }
 
 // Three link regressor matrix //
-inline Matrix3x9F threeLinkRegressor(sharedThreeLinkRobot& robot, Vector3x1F& v, Vector3x1F& a)
+inline Matrix3x9F threeLinkRegressor(ThreeLinkRobot& robot, Vector3x1F& v, Vector3x1F& a)
 {
-  Vector3x1F q = robot->thetaF;
-  Vector3x1F qdot = robot->dthetaF;
+  Vector3x1F q = robot.thetaF;
+  Vector3x1F qdot = robot.dthetaF;
 
   Matrix3x9F regressor;
   regressor(0,0) = a(0);

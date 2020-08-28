@@ -1,8 +1,6 @@
 #ifndef THREE_LINK_ROBOT_HPP_
 #define THREE_LINK_ROBOT_HPP_
 
-#include <memory>
-
 #include "mathUtilities/matrixUtilities.hpp"
 
 namespace robot
@@ -44,9 +42,6 @@ public:
   unsigned int numberLinks;
   Matrix3x3F motorGearRatio; // Diagonal Matrix of the Gear Ratios //
 };
-
-// Shared Pointer to the Robot //
-using sharedThreeLinkRobot = std::shared_ptr<ThreeLinkRobot>;
 
 } // namespace robot
 

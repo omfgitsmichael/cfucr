@@ -1,8 +1,6 @@
 #ifndef ONE_LINK_ROBOT_HPP_
 #define ONE_LINK_ROBOT_HPP_
 
-#include <memory>
-
 #include "mathUtilities/matrixUtilities.hpp"
 
 namespace robot
@@ -44,9 +42,6 @@ public:
   unsigned int numberLinks;
   ScalarF motorGearRatio; // Diagonal Matrix of the Gear Ratios //
 };
-
-// Shared Pointer to the Robot //
-using sharedOneLinkRobot = std::shared_ptr<OneLinkRobot>;
 
 } // namespace robot
 

@@ -18,40 +18,40 @@ public:
   {
   }
 
-  void executeAdaptiveControl(sharedThreeLinkRobot& robot)
+  void executeAdaptiveControl(ThreeLinkRobot& robot)
   {
     // Calculate and save the error //
-    robot->e = robot->thetaF - robot->theta_d;
-    robot->de = robot->dthetaF - robot->dtheta_d;
+    robot.e = robot.thetaF - robot.theta_d;
+    robot.de = robot.dthetaF - robot.dtheta_d;
 
     // Calculate passivity terms //
-    Vector3x1F v = calculateV<sharedThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
-    Vector3x1F a = calculateA<sharedThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
-    Vector3x1F r = calculateR<sharedThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
+    Vector3x1F v = calculateV<ThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
+    Vector3x1F a = calculateA<ThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
+    Vector3x1F r = calculateR<ThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
 
     // Calculate regressor matrix //
     Matrix3x9F Y = threeLinkRegressor(robot, v, a);
 
     // Update the estimated parameters //
     Vector9x1F F = -mGamma.inverse()*Y.transpose()*r;
-    Vector9x1F p = robot->parameters + F*mDelt;
-    robot->parameters = p;
+    Vector9x1F p = robot.parameters + F*mDelt;
+    robot.parameters = p;
 
     // Calculate the motor control torque for each link //
-    robot->u = robot->motorGearRatio.inverse()*(Y*p - mK*r);
+    robot.u = robot.motorGearRatio.inverse()*(Y*p - mK*r);
   }
 
   // Three link robust control //
-  void executeRobustControl(sharedThreeLinkRobot& robot)
+  void executeRobustControl(ThreeLinkRobot& robot)
   {
     // Calculate and save the error //
-    robot->e = robot->thetaF - robot->theta_d;
-    robot->de = robot->dthetaF - robot->dtheta_d;
+    robot.e = robot.thetaF - robot.theta_d;
+    robot.de = robot.dthetaF - robot.dtheta_d;
 
     // Calculate passivity terms //
-    Vector3x1F v = calculateV<sharedThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
-    Vector3x1F a = calculateA<sharedThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
-    Vector3x1F r = calculateR<sharedThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
+    Vector3x1F v = calculateV<ThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
+    Vector3x1F a = calculateA<ThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
+    Vector3x1F r = calculateR<ThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
 
     // Calculate regressor matrix //
     Matrix3x9F Y = threeLinkRegressor(robot, v, a);
@@ -63,54 +63,54 @@ public:
     Vector9x1F delp = normF > mEpsilon ? (-mRho/normF)*F : (-mRho/mEpsilon)*F;
 
     // Calculate the motor control torque for each link //
-    robot->u = robot->motorGearRatio.inverse()*(Y*(robot->parameters + delp) - mK*r);
+    robot.u = robot.motorGearRatio.inverse()*(Y*(robot.parameters + delp) - mK*r);
   }
   
   // Three link robust adaptive control //
-  void executeRobustAdaptiveControl(sharedThreeLinkRobot& robot)
+  void executeRobustAdaptiveControl(ThreeLinkRobot& robot)
   {
     // Calculate and save the error //
-    robot->e = robot->thetaF - robot->theta_d;
-    robot->de = robot->dthetaF - robot->dtheta_d;
+    robot.e = robot.thetaF - robot.theta_d;
+    robot.de = robot.dthetaF - robot.dtheta_d;
 
     // Calculate passivity terms //
-    Vector3x1F v = calculateV<sharedThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
-    Vector3x1F a = calculateA<sharedThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
-    Vector3x1F r = calculateR<sharedThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
+    Vector3x1F v = calculateV<ThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
+    Vector3x1F a = calculateA<ThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
+    Vector3x1F r = calculateR<ThreeLinkRobot, Vector3x1F, Matrix3x3F>(robot, mLambda);
 
     // Calculate regressor matrix //
     Matrix3x9F Y = threeLinkRegressor(robot, v, a);
 
     // Claculate the robust term //
     Vector6x1F e;
-    e(0) = robot->e(0);
-    e(1) = robot->e(1);
-    e(2) = robot->e(2);
-    e(3) = robot->de(0);
-    e(4) = robot->de(1);
-    e(5) = robot->de(2);
+    e(0) = robot.e(0);
+    e(1) = robot.e(1);
+    e(2) = robot.e(2);
+    e(3) = robot.de(0);
+    e(4) = robot.de(1);
+    e(5) = robot.de(2);
 
     float f = (e.norm()-mDel*mRho)/((1-mDel)*mRho);
     float mu = std::max(0.0f,std::min(1.0f,f));
 
     // Update the estimated parameters //
     Vector9x1F F = -mu*mGamma.inverse()*Y.transpose()*r;
-    Vector9x1F p = robot->parameters + F*mDelt;
-    robot->parameters = p;
+    Vector9x1F p = robot.parameters + F*mDelt;
+    robot.parameters = p;
 
     // Calculate the motor control torque for each link //
-    robot->u = robot->motorGearRatio.inverse()*(Y*p - mK*r);
+    robot.u = robot.motorGearRatio.inverse()*(Y*p - mK*r);
   }
 
   // Three link robust control //
-  void executePDControl(sharedThreeLinkRobot& robot)
+  void executePDControl(ThreeLinkRobot& robot)
   {
     // Calculate and save the error //
-    robot->e = robot->thetaF - robot->theta_d;
-    robot->de = robot->dthetaF - robot->dtheta_d;
+    robot.e = robot.thetaF - robot.theta_d;
+    robot.de = robot.dthetaF - robot.dtheta_d;
 
     // Calculate the motor control torque for each link //
-    robot->u = robot->motorGearRatio.inverse()*(mKp*robot->e + mKd*robot->de);
+    robot.u = robot.motorGearRatio.inverse()*(mKp*robot.e + mKd*robot.de);
   }
 
   // Public member variables //
