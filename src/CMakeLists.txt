@@ -9,6 +9,10 @@ include_directories(
   ${CFUCR_BASE_DIR}
 )
 
+target_include_directories(cfucr-libs INTERFACE
+  ${CFUCR_BASE_DIR}
+)
+
 # Add a list of subdirectories #
 add_subdirectory(configurator)
 add_subdirectory(control)
