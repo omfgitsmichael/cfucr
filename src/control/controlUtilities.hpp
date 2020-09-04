@@ -117,5 +117,32 @@ inline Matrix3x9F threeLinkRegressor(ThreeLinkRobot& robot, Vector3x1F& v, Vecto
   return regressor;
 }
 
+inline ScalarF oneLinkGavityTerms(OneLinkRobot& robot)
+{
+  ScalarF g;
+  
+  g(0) = robot.parameters(1)*std::cos(robot.thetaF(0));
+  return g;
+}
+
+inline Vector2x1F twoLinkGavityTerms(TwoLinkRobot& robot)
+{
+  Vector2x1F g;
+
+  g(0) = robot.parameters(3)*std::cos(robot.thetaF(0)) + robot.parameters(4)*std::cos(robot.thetaF(0)+robot.thetaF(1));
+  g(1) = robot.parameters(4)*std::cos(robot.thetaF(0)+robot.thetaF(1));
+  return g;
+}
+
+inline Vector3x1F threeLinkGavityTerms(ThreeLinkRobot& robot)
+{
+  Vector3x1F g;
+
+  g(0) = robot.parameters(6)*std::cos(robot.thetaF(0)) + robot.parameters(7)*std::cos(robot.thetaF(0)+robot.thetaF(1)) + robot.parameters(8)*std::cos(robot.thetaF(0)+robot.thetaF(1)+robot.thetaF(2));
+  g(1) = robot.parameters(7)*std::cos(robot.thetaF(0)+robot.thetaF(1)) + robot.parameters(8)*std::cos(robot.thetaF(0)+robot.thetaF(1)+robot.thetaF(2));
+  g(2) = robot.parameters(8)*std::cos(robot.thetaF(0)+robot.thetaF(1)+robot.thetaF(2));
+  return g;
+}
+
 } // namespace robot
 #endif // CONTROL_UTILITIES_HPP_

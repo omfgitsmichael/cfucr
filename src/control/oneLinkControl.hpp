@@ -105,8 +105,10 @@ public:
     robot.e = robot.thetaF - robot.theta_d;
     robot.de = robot.dthetaF - robot.dtheta_d;
 
+    ScalarF g = oneLinkGavityTerms(robot);
+
     // Calculate the motor control torque for each link //
-    robot.u = robot.motorGearRatio.inverse()*(mKp*robot.e + mKd*robot.de);
+    robot.u = robot.motorGearRatio.inverse()*(mKp*robot.e + mKd*robot.de + g);
   }
 
   // Public member variables //
